@@ -1,0 +1,72 @@
+# Project: MathDiverse
+# Makefile created by Dev-C++ 5.9.0
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+RES      = ../../../../../../MathDiverse/MathDiverse_private.res
+OBJ      = ../../../../../../MathDiverse/main.o ../../../../../../MathDiverse/diverse.o ../../../../../../MathDiverse/console.o ../../../../../../MathDiverse/game.o ../../../../../../MathDiverse/snakesource.o ../../../../../../MathDiverse/menu.o ../../../../../../MathDiverse/snake.o ../../../../../../MathDiverse/wall.o ../../../../../../MathDiverse/apple.o ../../../../../../MathDiverse/allumettes.o ../../../../../../MathDiverse/gestion.o ../../../../../../MathDiverse/tictac.o ../../../../../../MathDiverse/morpion.o ../../../../../../MathDiverse/tetris.o $(RES)
+LINKOBJ  = ../../../../../../MathDiverse/main.o ../../../../../../MathDiverse/diverse.o ../../../../../../MathDiverse/console.o ../../../../../../MathDiverse/game.o ../../../../../../MathDiverse/snakesource.o ../../../../../../MathDiverse/menu.o ../../../../../../MathDiverse/snake.o ../../../../../../MathDiverse/wall.o ../../../../../../MathDiverse/apple.o ../../../../../../MathDiverse/allumettes.o ../../../../../../MathDiverse/gestion.o ../../../../../../MathDiverse/tictac.o ../../../../../../MathDiverse/morpion.o ../../../../../../MathDiverse/tetris.o $(RES)
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib32" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -lwinmm -m32
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include/c++"
+BIN      = ../../../../../../MathDiverse/MathDiverse.exe
+CXXFLAGS = $(CXXINCS) -m32
+CFLAGS   = $(INCS) -m32
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+../../../../../../MathDiverse/main.o: main.cpp
+	$(CPP) -c main.cpp -o ../../../../../../MathDiverse/main.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/diverse.o: diverse.cpp
+	$(CPP) -c diverse.cpp -o ../../../../../../MathDiverse/diverse.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/console.o: snake/console.cpp
+	$(CPP) -c snake/console.cpp -o ../../../../../../MathDiverse/console.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/game.o: snake/game.cpp
+	$(CPP) -c snake/game.cpp -o ../../../../../../MathDiverse/game.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/snakesource.o: snake/snakesource.cpp
+	$(CPP) -c snake/snakesource.cpp -o ../../../../../../MathDiverse/snakesource.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/menu.o: snake/menu.cpp
+	$(CPP) -c snake/menu.cpp -o ../../../../../../MathDiverse/menu.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/snake.o: snake/snake.cpp
+	$(CPP) -c snake/snake.cpp -o ../../../../../../MathDiverse/snake.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/wall.o: snake/wall.cpp
+	$(CPP) -c snake/wall.cpp -o ../../../../../../MathDiverse/wall.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/apple.o: snake/apple.cpp
+	$(CPP) -c snake/apple.cpp -o ../../../../../../MathDiverse/apple.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/allumettes.o: allumettes.c
+	$(CPP) -c allumettes.c -o ../../../../../../MathDiverse/allumettes.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/gestion.o: Morpion/gestion.c
+	$(CPP) -c Morpion/gestion.c -o ../../../../../../MathDiverse/gestion.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/tictac.o: Morpion/tictac.c
+	$(CPP) -c Morpion/tictac.c -o ../../../../../../MathDiverse/tictac.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/morpion.o: Morpion/morpion.c
+	$(CPP) -c Morpion/morpion.c -o ../../../../../../MathDiverse/morpion.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/tetris.o: tetris.cpp
+	$(CPP) -c tetris.cpp -o ../../../../../../MathDiverse/tetris.o $(CXXFLAGS)
+
+../../../../../../MathDiverse/MathDiverse_private.res: MathDiverse_private.rc 
+	$(WINDRES) -i MathDiverse_private.rc -F pe-i386 --input-format=rc -o ../../../../../../MathDiverse/MathDiverse_private.res -O coff 
+

@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1378488640 source:c:\users\amine\desktop\progc\morpion\gestion.c
+	"cte.h"
+
+1400332460 c:\users\amine\desktop\progc\morpion\cte.h
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<time.h>
+
+1400334205 source:c:\users\amine\desktop\progc\morpion\main.c
+	"cte.h"
+
+1400365643 source:c:\users\amine\desktop\progc\morpion\morpion.c
+	"cte.h"
+
