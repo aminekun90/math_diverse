@@ -1,1 +1,1 @@
-# math_diverse
+# Math Diverse
