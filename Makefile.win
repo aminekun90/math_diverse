@@ -1,5 +1,5 @@
 # Project: MathDiverse
-# Makefile created by Dev-C++ 5.9.0
+# Makefile created by Dev-C++ 5.11
 
 CPP      = g++.exe
 CC       = gcc.exe
@@ -7,10 +7,10 @@ WINDRES  = windres.exe
 RES      = ../../../../../../MathDiverse/MathDiverse_private.res
 OBJ      = ../../../../../../MathDiverse/main.o ../../../../../../MathDiverse/diverse.o ../../../../../../MathDiverse/console.o ../../../../../../MathDiverse/game.o ../../../../../../MathDiverse/snakesource.o ../../../../../../MathDiverse/menu.o ../../../../../../MathDiverse/snake.o ../../../../../../MathDiverse/wall.o ../../../../../../MathDiverse/apple.o ../../../../../../MathDiverse/allumettes.o ../../../../../../MathDiverse/gestion.o ../../../../../../MathDiverse/tictac.o ../../../../../../MathDiverse/morpion.o ../../../../../../MathDiverse/tetris.o $(RES)
 LINKOBJ  = ../../../../../../MathDiverse/main.o ../../../../../../MathDiverse/diverse.o ../../../../../../MathDiverse/console.o ../../../../../../MathDiverse/game.o ../../../../../../MathDiverse/snakesource.o ../../../../../../MathDiverse/menu.o ../../../../../../MathDiverse/snake.o ../../../../../../MathDiverse/wall.o ../../../../../../MathDiverse/apple.o ../../../../../../MathDiverse/allumettes.o ../../../../../../MathDiverse/gestion.o ../../../../../../MathDiverse/tictac.o ../../../../../../MathDiverse/morpion.o ../../../../../../MathDiverse/tetris.o $(RES)
-LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib32" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -lwinmm -m32
-INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include"
-CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include/c++"
-BIN      = ../../../../../../MathDiverse/MathDiverse.exe
+LIBS     = -L"E:/Program Files (x86)/Dev-Cpp/MinGW64/lib32" -L"E:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -lwinmm -m32
+INCS     = -I"E:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"E:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"E:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"E:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"E:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+BIN      = ../../../../MathDiverse/MathDiverse.exe
 CXXFLAGS = $(CXXINCS) -m32
 CFLAGS   = $(INCS) -m32
 RM       = rm.exe -f

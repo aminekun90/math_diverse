@@ -1,9 +1,9 @@
 #ifndef DEF_DIVERSE
 #define DEF_DIVERSE
 #define CURL_STATICLIB
-#include <curl/curl.h>
+//#include <curl/curl.h>
 //#include <curl/types.h>
-#include <curl/easy.h>
+//#include <curl/easy.h>
 
 #include<iostream>
 #include <unistd.h>//sleep();

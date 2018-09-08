@@ -55,7 +55,7 @@ Sleep(1000);
 	system("cls");
 	color(14,0);
 	setCursorPos(5, 10);
-	printf("Bienvenu dans le nouveau MathDiverse %s B%cta Les menus ont %ct%c repens%cs\n",VERP,136,130,130,130);
+	printf("Bienvenu dans le nouveau MathDiverse %s B%cta Les menus ont ้t้ repens้s\n",VERP,136,130,130,130);
     setCursorPos(6, 11);
     printf("D%csormet vous pouvez utiliser les fl%cches du clavier pour naviguer %c\n",130,138,1);
 	setCursorPos(40, 22);
@@ -69,9 +69,9 @@ while(done)
 {
 	label:
 		color(7,0);
-	 printf("๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอป\t\t");gettime();
-	printf("\n๏ฟฝMise %c Jour: ",133);JOUR;printf(" Version  %s.๏ฟฝ",VER);
-	printf("\n๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอผ\n");
+	printf("ษอออออออออออออออออออออออออออออออออออออออออป\t\t");gettime();
+	printf("\nบMise %c Jour: ",133);JOUR;printf(" Version  %s.บ",VER);
+	printf("\nศอออออออออออออออออออออออออออออออออออออออออผ\n");
 	 changeColor(WHITE);
 	//printf("%d",i);
 	setCursorPos(5, 10);

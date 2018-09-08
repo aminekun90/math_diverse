@@ -1141,33 +1141,36 @@ void apropos(void)
 	color(12,0);
 	printf("Atention:\n\nPour le bon fonctionnement de ce programme on vous conseil de:\n\n-Eviter de taper n'importe quoi sur le clavier lorsque des choix sont propos%cs\n\nou de taper un caract%cre lorsque un nombre est demand%c. Merci !\n\n-V%crifier si une mise %c jour est disponible sur :\n",130,138,130,130,133);
 	color(2,0);
-		printf("ษอออออออออออออออออออออออออออป\t\t");
-	printf("\nบhttp://hellow-dev.cwebh.orgบ");
-	printf("\nศอออออออออออออออออออออออออออผ");
+		printf("ษอออออออออออออออออออออออออออออป\t\t");
+	printf("\nบhttps://github.com/aminekun90บ");
+	printf("\nศอออออออออออออออออออออออออออออผ");
 	color(0,15);
 	printf("\nDes id%ces d'am%clioration ? contactez nous!.%c",130,130,1);
 	color(10,0);
 	printf("\n\n===============================================================================\n\n");
 	color(15,0);
-	printf("Voulez-vous v%crifier si une mise %c jour est disponible ? \n\n[Oui]: tapez 'O'.\n\n[Non]: tapez 'N'",130,133);
+//	printf("Voulez-vous v%crifier si une mise %c jour est disponible ? \n\n[Oui]: tapez 'O'.\n\n[Non]: tapez 'N'",130,133);
+	printf("Tapez une touche pour revenir",130,133);
 	down=getch();
-	switch(down)
-	{
-		    case 'O':
-			case 'o':
-			system("start download.exe");
-			exit(0);
-
-		break;
-		case 'n':
-			case 'N':
-			system("cls");
-
-		break;
-		default:
-		system("cls");
-		apropos();break;
-	}
+	printf("Voulez-vous v%crifier si une mise %c jour est disponible ? \n\n[Oui]: tapez 'O'.\n\n[Non]: tapez 'N'",130,133);
+	system("cls");
+//	switch(down)
+//	{
+//		    case 'O':
+//			case 'o':
+//			system("start download.exe");
+//			exit(0);
+//
+//		break;
+//		case 'n':
+//			case 'N':
+//			system("cls");
+//
+//		break;
+//		default:
+//		system("cls");
+//		apropos();break;
+//	}
 }
 
 /*======================================================================*/
