@@ -1,0 +1,84 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Linux x86_64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y cmake
+      - run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build
+      - name: Tests des calculs
+        run: ./build/tests_math
+      - run: file build/MathDiverse
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MathDiverse-linux-x86_64
+          path: |
+            build/MathDiverse
+            build/tetris.wav
+            build/a.xm
+
+  macos:
+    name: macOS arm64
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install cmake
+      - run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build
+      - name: Tests des calculs
+        run: ./build/tests_math
+      - run: file build/MathDiverse
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MathDiverse-macos-arm64
+          path: |
+            build/MathDiverse
+            build/tetris.wav
+            build/a.xm
+
+  windows:
+    name: Windows (MinGW, toolchain d'origine)
+    # Le projet a toujours été construit avec TDM-GCC sous Dev-C++ : VLA,
+    # M_PI, unistd.h, déclarations de fonctions à l'ancienne. MSVC refuse
+    # tout cela, et le rendre compatible reviendrait à réécrire le code de
+    # 2010 — ce que ce dépôt ne veut pas faire. On reste donc sur GCC.
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+      - name: Configure
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build
+      - name: Tests des calculs
+        run: ./build/tests_math.exe
+      - name: Vérifier l'exécutable
+        run: |
+          test -f build/MathDiverse.exe
+          file build/MathDiverse.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MathDiverse-windows-mingw
+          path: |
+            build/MathDiverse.exe
+            build/tetris.wav
+            build/a.xm

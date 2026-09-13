@@ -6,13 +6,25 @@
 //#include <curl/easy.h>
 
 #include<iostream>
+/* MinGW fournissait unistd.h, MSVC non : le projet n'a jamais vis√© MSVC. */
+#ifndef _MSC_VER
 #include <unistd.h>//sleep();
+#endif
 #include <stdio.h>/*Biblio*/
 #include <stdlib.h>/*standards*/
-#include <conio.h>/*entrÈe-sortie*/
+#ifndef _WIN32
+#include "platform/compat.h"
+#endif
+#ifdef _WIN32
+#include <conio.h>/*entr√©e-sortie*/
+#ifdef _WIN32
 #include <windows.h>//system();
+#else
+#include "platform/compat.h"
+#endif
+#endif
 #include <math.h>//pow();cos();sin();...
-#include <string.h>//chaines de caractËres
+#include <string.h>//chaines de caract√®res
 #define VER "1.06b"//version
 #define VERP "1.06"//version sans b
 #define JOUR printf("31 Ao%ct 2014",150);//Jour
@@ -30,7 +42,7 @@ int menu();
 void apropos(void);
 int menueq();
 int quitter();
-//les Èquations
+//les √©quations
 int eq1();
 int eq2();
 //determinant
@@ -50,9 +62,11 @@ int partition(int*, int, int);
 void tri_rapide_bis(int*, int,int);
 void tri_rapide(int*,int);
 int calctri(void);
+int lire_entier(const char* invite, int* sortie);
+int lire_reel(const char* invite, float* sortie);
 //Autres
 int menuautres();
-void multiply(int);//factoriel trËs amÈliorÈ !! 2000!
+void multiply(int);//factoriel tr√®s am√©lior√© !! 2000!
 void fact(int,int);
 void premier();
 //DL
@@ -70,5 +84,28 @@ int wtab(int*,int*,int,int);
 void change();
 //jeux
 void menujeux();
+/* Series de Taylor par recurrence, sans pow ni factorielle */
+double reduire_angle(double degres);
+double serie_sin(double x, int n);
+double serie_cos(double x, int n);
+double serie_exp(double x, int n);
+double serie_ln1p(double x, int n);
+int calctan(void);
+unsigned long long produit_mod(unsigned long long a, unsigned long long b, unsigned long long m);
+unsigned long long puissance_mod(unsigned long long a, unsigned long long e, unsigned long long m);
+int est_premier(long long valeur);
+int lucas_lehmer(int p);
+long long facteur_mersenne(int p, long kmax);
+int mersenne(void);
+int facteurs(void);
+int crible(void);
+/* Calculs ajoutes en 2026 */
+int calcexp(void);
+int calccos(void);
+int calcln(void);
+int pgcdppcm(void);
+int conversion(void);
+int stats(void);
+int systeme2(void);
 
 #endif

@@ -1,8 +1,16 @@
 //#include "stdafx.h"
 
 #include <stdio.h>
+#ifdef _WIN32
 #include <windows.h>
+#ifdef _WIN32
 #include <mmsystem.h>
+#else
+#include "platform/compat.h"
+#endif
+#else
+#include "platform/compat.h"
+#endif
 #include <time.h>
 #include "tetris.h"
 #include "diverse.h"

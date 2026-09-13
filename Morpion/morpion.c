@@ -7,10 +7,10 @@ int Jeu(int w,int m)
           /*les deux image croix et rond*/
       Objet tabl[2];
            /* les deux map mode graph/nn graph*/
-      char  map[LM][LaM]={NULL};
-      int jeu[3][3]={NULL};
+      char  map[LM][LaM]={0};
+      int jeu[3][3]={0};
         /*    autres   */
-      int t[10][3]={NULL};
+      int t[10][3]={0};
       char ltr=0,pc=0;
           /* les conteurs */
       int L=0,l=0,i=0,n=1;
@@ -101,7 +101,7 @@ if(i%2==m)//si c'est le tour du pc(i est un conteur de tours ->i%2=(1 ou 0)
 else Utilisateur(map,jeu,&x,&y,&i,tabl);//else c'est le tour du joueur
 }
 
-else  Utilisateur(map,jeu,&x,&y,&i,tabl);//si w est fausse c a dire si lutilisateur a demandé
+else  Utilisateur(map,jeu,&x,&y,&i,tabl);//si w est fausse c a dire si lutilisateur a demandÃ©
 /*bon on regarde si quelqu'un a gagner*/                                         //partie 2joueurs*/
 if(gagner(jeu)!=1&&gagner(jeu)!=2)
 {

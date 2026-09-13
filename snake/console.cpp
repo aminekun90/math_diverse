@@ -2,9 +2,15 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#ifdef _WIN32
 #include <conio.h>
+#endif
 #include <math.h>
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "platform/compat.h"
+#endif
 #include "console.h"
 
 using namespace std;

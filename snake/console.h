@@ -2,7 +2,11 @@
 #define H_CONSOLE
 
 #include <string>
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "platform/compat.h"
+#endif
 
 using namespace std;
 
