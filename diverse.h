@@ -9,10 +9,19 @@
 #include <unistd.h>//sleep();
 #include <stdio.h>/*Biblio*/
 #include <stdlib.h>/*standards*/
-#include <conio.h>/*entrée-sortie*/
+#ifndef _WIN32
+#include "platform/compat.h"
+#endif
+#ifdef _WIN32
+#include <conio.h>/*entrÃ©e-sortie*/
+#ifdef _WIN32
 #include <windows.h>//system();
+#else
+#include "platform/compat.h"
+#endif
+#endif
 #include <math.h>//pow();cos();sin();...
-#include <string.h>//chaines de caractères
+#include <string.h>//chaines de caractÃ¨res
 #define VER "1.06b"//version
 #define VERP "1.06"//version sans b
 #define JOUR printf("31 Ao%ct 2014",150);//Jour
@@ -30,7 +39,7 @@ int menu();
 void apropos(void);
 int menueq();
 int quitter();
-//les équations
+//les Ã©quations
 int eq1();
 int eq2();
 //determinant
@@ -52,7 +61,7 @@ void tri_rapide(int*,int);
 int calctri(void);
 //Autres
 int menuautres();
-void multiply(int);//factoriel très amélioré !! 2000!
+void multiply(int);//factoriel trÃ¨s amÃ©liorÃ© !! 2000!
 void fact(int,int);
 void premier();
 //DL

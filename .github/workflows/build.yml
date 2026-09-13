@@ -1,0 +1,62 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Linux x86_64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y cmake
+      - run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build
+      - run: file build/MathDiverse
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MathDiverse-linux-x86_64
+          path: |
+            build/MathDiverse
+            build/tetris.wav
+            build/a.xm
+
+  macos:
+    name: macOS arm64
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install cmake
+      - run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build
+      - run: file build/MathDiverse
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MathDiverse-macos-arm64
+          path: |
+            build/MathDiverse
+            build/tetris.wav
+            build/a.xm
+
+  windows:
+    name: Windows x86 (code d'origine)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure (Win32)
+        run: cmake -B build -A Win32
+      - name: Build
+        run: cmake --build build --config Release
+      - name: Vérifier l'exécutable
+        shell: pwsh
+        run: |
+          $exe = "build/Release/MathDiverse.exe"
+          if (-not (Test-Path $exe)) { throw "MathDiverse.exe absent" }
+          Get-Item $exe | Format-List Name, Length
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MathDiverse-win32
+          path: build/Release/MathDiverse.exe

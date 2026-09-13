@@ -1,19 +1,19 @@
 // Nom du fichier : myconio.h
 // Auteur : prof.geii37@laposte.net
 // Version : Novembre 2004
-// Objectif : remédier à l'absence de certaines fonctions conio sous DevC++
+// Objectif : remÃ©dier Ã  l'absence de certaines fonctions conio sous DevC++
 
 /* Remarques :
-    - Dev-C++ possède déjà une bibliothèque conio dans laquelle les fonctions
-      « getch », « getche », « kbhit », « putch » et « ungetch » sont codées.
-    - « textmode n'a pas été réécrite car les modes d'affichage prévus sous DOS 
-      n'ont pas de sens dans une fenêtre console Windows.
-    - « window » n'a pas pu être écrite... seule une fonction « MYclrwin » a été
-      codée pour remplacer l'appel de « window » suivi d'un « clrscr ». 
-      Toutefois la zone d'écriture à l'écran n'est pas limitée.
-    - « MYwindow » redimensionne la fenêtre de la console. 
+    - Dev-C++ possÃ¨de dÃ©jÃ  une bibliothÃ¨que conio dans laquelle les fonctions
+      Â« getch Â», Â« getche Â», Â« kbhit Â», Â« putch Â» et Â« ungetch Â» sont codÃ©es.
+    - Â« textmode n'a pas Ã©tÃ© rÃ©Ã©crite car les modes d'affichage prÃ©vus sous DOS 
+      n'ont pas de sens dans une fenÃªtre console Windows.
+    - Â« window Â» n'a pas pu Ãªtre Ã©crite... seule une fonction Â« MYclrwin Â» a Ã©tÃ©
+      codÃ©e pour remplacer l'appel de Â« window Â» suivi d'un Â« clrscr Â». 
+      Toutefois la zone d'Ã©criture Ã  l'Ã©cran n'est pas limitÃ©e.
+    - Â« MYwindow Â» redimensionne la fenÃªtre de la console. 
       A noter : le comportement de cette fonction n'a aucun rapport avec celui 
-      de « window » de conio.
+      de Â« window Â» de conio.
 */    
 
 #ifndef _MYCONIO_H_
@@ -63,70 +63,70 @@ void delline();
 
 #define cprintf printf
 #define cscanf scanf
-/* Les fonctions « cprintf » et « cscanf » n'ont pas été réécrites, ceci est 
-   peut-être une erreur... 
-   En effet, « scanf » lit les données à partir de « stdin » et les fonctions 
-   d'entrée de la console lisent les données à partir de « STD_INPUT_HANDLE ». 
-   Or il semblerait que « fflush(stdin) ; » n'ait pas le même effet que 
-   « FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE)) ; »... 
+/* Les fonctions Â« cprintf Â» et Â« cscanf Â» n'ont pas Ã©tÃ© rÃ©Ã©crites, ceci est 
+   peut-Ãªtre une erreur... 
+   En effet, Â« scanf Â» lit les donnÃ©es Ã  partir de Â« stdin Â» et les fonctions 
+   d'entrÃ©e de la console lisent les donnÃ©es Ã  partir de Â« STD_INPUT_HANDLE Â». 
+   Or il semblerait que Â« fflush(stdin) ; Â» n'ait pas le mÃªme effet que 
+   Â« FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE)) ; Â»... 
    A suivre... */
 
 int cputs(const char *str) ;
 
 int Gettext(int left, int top, int right, int bottom, void *destin) ;
 #define gettext Gettext
-/* Cette astuce a dû être utilisée car la ligne
-   « int gettext(int left, int top, int right, int bottom, void *destin) ; »
+/* Cette astuce a dÃ» Ãªtre utilisÃ©e car la ligne
+   Â« int gettext(int left, int top, int right, int bottom, void *destin) ; Â»
    produit un message d'erreur (sous Dev-C++) ! */
 
 void gettextinfo(struct text_info *_r);
 
 int MYgetch(void) ;
 int MYgetche(void) ;
-/*  « getch », « getche » sont déjà définies dans <conio.h> (mingw). Cependant,
-    au même titre que « getchar » (stdio) ne consomme pas le caractère <CR>,
-    elles ne consomment pas le caractère saisi par l'utilisateur (c'est à dire :
-    elles n'enlèvent pas le caractère du buffer d'entrée). « MYgetch », 
-    « MYgetche » vident le buffer. Attention, « MYgetch » et « MYgetche » 
-    n'enlèvent pas un caractère, mais tous les caractères disponibles. Grâce
-    aux directives « #define » inclus dans MYconio.cpp, ce sont les fonctions 
-    « MYgetch » et « MYgetche » qui seront appelées si dans un source on fait
-    appel à « getch » ou « getche ». */
+/*  Â« getch Â», Â« getche Â» sont dÃ©jÃ  dÃ©finies dans <conio.h> (mingw). Cependant,
+    au mÃªme titre que Â« getchar Â» (stdio) ne consomme pas le caractÃ¨re <CR>,
+    elles ne consomment pas le caractÃ¨re saisi par l'utilisateur (c'est Ã  dire :
+    elles n'enlÃ¨vent pas le caractÃ¨re du buffer d'entrÃ©e). Â« MYgetch Â», 
+    Â« MYgetche Â» vident le buffer. Attention, Â« MYgetch Â» et Â« MYgetche Â» 
+    n'enlÃ¨vent pas un caractÃ¨re, mais tous les caractÃ¨res disponibles. GrÃ¢ce
+    aux directives Â« #define Â» inclus dans MYconio.cpp, ce sont les fonctions 
+    Â« MYgetch Â» et Â« MYgetche Â» qui seront appelÃ©es si dans un source on fait
+    appel Ã  Â« getch Â» ou Â« getche Â». */
     
 void gotoxy(int x, int y);
 
 void highvideo();
 void insline();
-// kbhit : OK déjà défini dans <conio.h> (mingw)
+// kbhit : OK dÃ©jÃ  dÃ©fini dans <conio.h> (mingw)
 void lowvideo();
 int movetext(int left, int top, int right, int bottom, int destleft, int desttop);
 void normvideo();
-// putch : OK déjà défini dans <conio.h> (mingw)
+// putch : OK dÃ©jÃ  dÃ©fini dans <conio.h> (mingw)
 int puttext(int left, int top, int right, int bottom, void *source);
 
 void textattr(int _attr);
 void textbackground(int _color);
 void textcolor(int _color);         
 /* BLINK (clignotement) ne fonctionne pas ! Par contre, il est possible 
-   d'utiliser les oucleurs LIGHT pour le fond d'écran, ce qui n'est pas le cas
+   d'utiliser les oucleurs LIGHT pour le fond d'Ã©cran, ce qui n'est pas le cas
    pour une application DOS.*/
    
-/* « void textmode(int _mode); » n'a pas été réécrite, car  les modes 
+/* Â« void textmode(int _mode); Â» n'a pas Ã©tÃ© rÃ©Ã©crite, car  les modes 
    d'affichage DOS n'ont aucun sens dans une application console Windows. */
-// ungetch : OK déjà défini dans <conio.h> (mingw)
+// ungetch : OK dÃ©jÃ  dÃ©fini dans <conio.h> (mingw)
 int wherex();
 int wherey();
 
 void MYclrwin(int left, int top, int right, int bottom); // efface une zone
-/* La fonction « window » de conio est fréquemment utilisée (suivi de 
-   « clrscr ») pour effacer une zone de l'écran et modifier sa couleur en 
-   fonction des attribus mis à jour par « textcolor » ou « textbackground ».
-   « MYclrwin » permet cela, mais elle n'interdit pas d'écrire en dehors 
+/* La fonction Â« window Â» de conio est frÃ©quemment utilisÃ©e (suivi de 
+   Â« clrscr Â») pour effacer une zone de l'Ã©cran et modifier sa couleur en 
+   fonction des attribus mis Ã  jour par Â« textcolor Â» ou Â« textbackground Â».
+   Â« MYclrwin Â» permet cela, mais elle n'interdit pas d'Ã©crire en dehors 
    de cette zone.*/
  
 void MYwindow(int left, int top, int right, int bottom); 
-/* « MYwindow » permet de redimensionner la fenêtre de la console. Cependant, 
-   ce comportement, n'est pas celui de la fonction « window » de conio */
+/* Â« MYwindow Â» permet de redimensionner la fenÃªtre de la console. Cependant, 
+   ce comportement, n'est pas celui de la fonction Â« window Â» de conio */
 
 // void window(int left, int top, int right, int bottom); 
 

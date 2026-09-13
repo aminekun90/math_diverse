@@ -10,20 +10,20 @@ int tictactoe()
     int w=0,t[3]={15,15,10},done=1,i=2,m=0;
     char choix=0;
     while(1){
-       while(done){//tan que done est vari (tant que lutilisateur n'a pas cliqué sur entreé
+       while(done){//tan que done est vari (tant que lutilisateur n'a pas cliquÃ© sur entreÃ©
           DEBUT/*on affiche le msg de l'aceuille*/
           /*puis le menu*/
           colort(t[2],0);printf("\t\t\t1-Partie un joueur\n");
           colort(t[1],0);printf("\t\t\t2-Partie deux jour\n");
           colort(t[0],0);printf("\t\t\t3-Quiter le jeu   \n");
-          choix=getch();//on stock la touche pressé par l'utilisateur dans choix
+          choix=getch();//on stock la touche pressÃ© par l'utilisateur dans choix
           if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
           if(choix==HAUT && i!=2) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
             t[i]=10;   system("cls");//on bouge le  curseur dans le menu
-          if(choix==OK)//si l'utilisateur a cliqué sur entreé
+          if(choix==OK)//si l'utilisateur a cliquÃ© sur entreÃ©
           {
               switch(i)
               {
@@ -39,7 +39,7 @@ int tictactoe()
                   w=1;//on renvoi w & m
                   break;
                   case 1: w=0; break; //si il  a choisi partie 2joueurs
-                  case 0:  return 0;break;//si il a choisi de quité on ferme le prog
+                  case 0:  return 0;break;//si il a choisi de quitÃ© on ferme le prog
               }
               done=0;//pour finir la boucle
           }
@@ -48,7 +48,7 @@ int tictactoe()
   while(done!=2)
   {
               Jeu(w,m); done=0; system("cls");//on apelle la fonction jeu ol lui envoiant les 2 parametre que le joueur
-                                              //a donné
+                                              //a donnÃ©
               while(done==0)
               {
               printf("\n\n\n\n\n\n\t\t\tveux-tu recommancer?\?(o/n):");

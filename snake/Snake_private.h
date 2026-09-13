@@ -14,7 +14,7 @@
 #define FILE_VERSION	"1.0.0.0"
 #define FILE_DESCRIPTION	"Snake Console"
 #define INTERNAL_NAME	""
-#define LEGAL_COPYRIGHT	"Tous droits réservés © 2014"
+#define LEGAL_COPYRIGHT	"Tous droits rÃ©servÃ©s Â© 2014"
 #define LEGAL_TRADEMARKS	""
 #define ORIGINAL_FILENAME	""
 #define PRODUCT_NAME	"Snake"

@@ -9,7 +9,7 @@
 char n[MAX]="1";
 int quitter()
 {
-	setTitle("MathDiverse "VER"");
+	setTitle("MathDiverse " VER "");
 	system("cls");
 			printf("\n%c bient%ct !%c\n\nLe programme va quitter tout seul patientez.",183,147,1);
 			Sleep(1000);
@@ -27,9 +27,9 @@ system("title MathDiverse");
 	 while(done)
 	 {
 	 	color(7,0);
-	printf("ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»\t\t");gettime();
-	printf("\nºMise %c Jour: ",133);JOUR;printf(" Version  %s.º",VER);
-	printf("\nÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼\n");
+	printf("â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—\t\t");gettime();
+	printf("\nâ•‘Mise %c Jour: ",133);JOUR;printf(" Version  %s.â•‘",VER);
+	printf("\nâ•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n");
 	color(10,0);
 	printf("==================MENU===================\n");
 	color(10,0);printf("\t\t\t\t\t*\n");
@@ -49,12 +49,12 @@ system("title MathDiverse");
 	choix=getch();
 
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
 
           if(choix==HAUT && i!=6) {t[i]=15; i++;}
 
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
            t[6]=12; t[i]=10;
 		   system("cls");
 			//on bouge le  curseur dans le menu
@@ -100,7 +100,7 @@ system("title MathDiverse");
 
 
 	}//switch
-	done=0;//pour arrêter la boucle
+	done=0;//pour arrÃªter la boucle
 		}//ifOK
 
 
@@ -144,10 +144,10 @@ while (done)
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
           if(choix==HAUT && i!=3) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
            t[3]=12; t[i]=10;
 		   system("cls");
 			//on bouge le  curseur dans le menu
@@ -181,7 +181,7 @@ while (done)
 
 int eq1()
 {
-	system("title Equation de premier degré");
+	system("title Equation de premier degrÃ©");
 float a,b,result;
 
 system("cls");
@@ -211,7 +211,7 @@ menueq();
 
 int eq2()
 {
-	system("title Equation de deuxième degré");
+	system("title Equation de deuxiÃ¨me degrÃ©");
 	system("cls");
 	printf("\nVotre Equation est sous la forme: ax^2+bx+c=0\n");
 	float a,b,c,d,x1,x2;
@@ -253,7 +253,7 @@ int eq2()
 }
 void calcdet(void)
 {
-	system("title Déterminant d'une Matrice");
+	system("title DÃ©terminant d'une Matrice");
 	float a[LIMIT][LIMIT],temp[LIMIT][LIMIT],value;
   int i,j,order;
   printf("Taille de votre matrice :");
@@ -358,10 +358,10 @@ int en_desordre = 1;
 				 en_desordre = TRUE;
 			 }
  		}
-		 k=k-1;  //version optimisé
+		 k=k-1;  //version optimisÃ©
  	}
  }
-// tri par sélection
+// tri par sÃ©lection
 void tri_selection(int *t, int n)
 {
 int i, min, j , tmp;
@@ -504,13 +504,13 @@ void tri_rapide(int *t,int n)
 	tri_rapide_bis(t,0,n-1);
 }
 
- /* Fin de la définition des fonctions de tri */
+ /* Fin de la dÃ©finition des fonctions de tri */
 
  int calctri(void)
  {
  	system("title Tri de Tableau");
      int nb_entiers;
-	 // nombre d'entiers à entrer
+	 // nombre d'entiers Ã  entrer
 	 int *tab,*temp; // tableau des entiers
 	 int i,coul=0,done=1,t[6]={10,15,15,15,15,15}; // compteur
 	 char choix;
@@ -518,7 +518,7 @@ void tri_rapide(int *t,int n)
 	 // lire nb_entiers
 	 printf("Donner le nombre d'entiers que vous voulez trier: ");
 	  scanf("%d",&nb_entiers);
-	  // allouer la mémoire pour tab[nb_entiers]
+	  // allouer la mÃ©moire pour tab[nb_entiers]
 	  tab=(int *)malloc(nb_entiers*sizeof(int));
 	  temp=(int *)malloc(nb_entiers*sizeof(int));
     // remplir tab[nb_entiers]
@@ -560,16 +560,16 @@ void tri_rapide(int *t,int n)
 	color(10,0);
 	 printf("\n=======================================\n\n");
 	color(15,0);
-	// choisir l'algorithme à appliquer
+	// choisir l'algorithme Ã  appliquer
 
 	printf("\nVeuillez choisir le num%cro de de l'algorithme de tri %c appliquer et puis \nappuiyez sur [Enter] ",130,133);
 	choix=getch();
 
 	 	if(choix==BAS  && coul!=0) {t[coul]=15; coul--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
           if(choix==HAUT && coul!=5) {t[coul]=15; coul++;}
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
            t[coul]=10;
 		   system("cls");
 			//on bouge le  curseur dans le menu
@@ -605,7 +605,7 @@ void tri_rapide(int *t,int n)
 	}//for
 	}//while
 
-	 // résultat
+	 // rÃ©sultat
 	 system("cls");
 	 printf("\nAvant le trie! :\n ");
 	 color(14,0);
@@ -652,10 +652,10 @@ while (done)
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
           if(choix==HAUT && i!=3) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
                       t[3]=12;
 					  t[i]=10;
 					  system("cls");//on bouge le  curseur dans le menu
@@ -918,7 +918,7 @@ x=(x*M_PI)/180;
 int menudl()
 {
 	int t[4]={10,15,15,12},done=1,i=0;
-	system("title Développement Limité");
+	system("title DÃ©veloppement LimitÃ©");
 char choix=0;
  while(done){
 	color(10,0);
@@ -948,15 +948,15 @@ char choix=0;
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
           if(choix==HAUT && i!=3) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
             t[3]=12;
 			t[i]=10;
 			system("cls");//on bouge le  curseur dans le menu
           if(choix==27){done=0; quitter(); }
-	if(choix==OK)//si l'utilisateur a cliqué sur entreé
+	if(choix==OK)//si l'utilisateur a cliquÃ© sur entreÃ©
           {
 	switch(i)
 	{
@@ -1004,7 +1004,7 @@ int wdeter(float a[][LIMIT],int forder,float value)
     fichier = fopen("txt/Determinent.txt", "a+");
 
     if (fichier != NULL)
-    {// On peut lire et écrire dans le fichier
+    {// On peut lire et Ã©crire dans le fichier
     fprintf(fichier,"===================================\nVotre Matrice:\n");
     	for(i=0;i<forder;i++)
 		  {
@@ -1037,7 +1037,7 @@ int weq(float a,float b,float c, float x1,float x2,int param)//weq(a,b,c,x1,x2,p
     fichier = fopen("txt/Equations.txt", "a+");
 
     if (fichier != NULL)
-    {// On peut lire et écrire dans le fichier
+    {// On peut lire et Ã©crire dans le fichier
     if(param==1)
     {
 
@@ -1084,7 +1084,7 @@ int wtab(int *t,int *temp,int nb_entiers,int param)
     fichier = fopen("txt/Trietableau.txt", "a+");
 
 	if (fichier != NULL)
-    {// On peut lire et écrire dans le fichier
+    {// On peut lire et Ã©crire dans le fichier
     fprintf(fichier,"===================================\nVotre Tableau:");
 
 	fprintf(fichier,"\nAvant le trie! :\n ");
@@ -1141,9 +1141,9 @@ void apropos(void)
 	color(12,0);
 	printf("Atention:\n\nPour le bon fonctionnement de ce programme on vous conseil de:\n\n-Eviter de taper n'importe quoi sur le clavier lorsque des choix sont propos%cs\n\nou de taper un caract%cre lorsque un nombre est demand%c. Merci !\n\n-V%crifier si une mise %c jour est disponible sur :\n",130,138,130,130,133);
 	color(2,0);
-		printf("ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»\t\t");
-	printf("\nºhttps://github.com/aminekun90º");
-	printf("\nÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼");
+		printf("â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—\t\t");
+	printf("\nâ•‘https://github.com/aminekun90â•‘");
+	printf("\nâ•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•");
 	color(0,15);
 	printf("\nDes id%ces d'am%clioration ? contactez nous!.%c",130,130,1);
 	color(10,0);
@@ -1211,10 +1211,10 @@ label:
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
           if(choix==HAUT && i!=5) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
             t[5]=12;
 			t[i]=10;
 			system("cls");//on bouge le  curseur dans le menu
@@ -1267,13 +1267,13 @@ label:
 
 /*======================================================================*/
 
-/* color(x,y); à l'endroit où l'on veut mettre les couleurs
-x correspond à la couleur du texte
-y correspond à la couleur de fond
+/* color(x,y); Ã  l'endroit oÃ¹ l'on veut mettre les couleurs
+x correspond Ã  la couleur du texte
+y correspond Ã  la couleur de fond
 
 les valeurs:
 0: noir
-1: bleu foncé
+1: bleu foncÃ©
 2: vert
 3: bleu-gris
 4: marron

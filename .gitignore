@@ -1,32 +1,14 @@
-# Prerequisites
-*.d
+# Build
+build/
+CMakeUserPresets.json
 
-# Compiled Object files
-*.slo
-*.lo
+# Binaires d'epoque, reconstruits par CMake
+*.exe
 *.o
 *.obj
+*.layout
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-# *.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-# *.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# macOS
+.DS_Store
+macos/.build/
+macos/MathDiverse.app/

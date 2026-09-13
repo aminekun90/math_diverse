@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <time.h>
+#ifdef _WIN32
 #include "myconio.h"
+#else
+#include "platform/compat.h"
+#endif
 
 #define    GAUCHE    75
 #define    DROITE    77

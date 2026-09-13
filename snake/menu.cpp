@@ -2,8 +2,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#ifdef _WIN32
 #include <conio.h>
+#endif
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "platform/compat.h"
+#endif
 #include "../diverse.h"
 #include "menu.h"
 #include "game.h"
@@ -57,7 +63,7 @@ system("cls");
         // Titre
         setCursorPos(7, 1);
         cout << "Snake Console - Hellow-dev - ";
-        cout << "Tous droits r" << char(130) << "serv" << char(130) << "s © (ou pas)";
+        cout << "Tous droits r" << char(130) << "serv" << char(130) << "s Â© (ou pas)";
             
                
    
@@ -82,10 +88,10 @@ system("cls");
         
         		choice=getch();
         	if(choice==72  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ©ro
           on descend le curseur dans le menu*/
           if(choice==80 && i!=3) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
+          /*la mÃ©me chose avec haut*/
             t[3]=12;
 			t[i]=10;   
 			clearConsole();//on bouge le  curseur dans le menu
@@ -141,7 +147,7 @@ void InfoGame()
     // Titre
     setCursorPos(7, 1);
     cout << "Snake Console  - Hellow-dev - ";
-    cout << "Tous droits r" << char(130) << "serv" << char(130) << "s © (ou pas)";
+    cout << "Tous droits r" << char(130) << "serv" << char(130) << "s Â© (ou pas)";
      
     // Informations
     setCursorPos(0, 4);
@@ -179,7 +185,7 @@ void GameOver(long score, int fruit, int bonus)
     // Titre
     setCursorPos(7, 1);
     cout << "Snake Console - Hellow-dev - ";
-    cout << "Tous droits r" << char(130) << "serv" << char(130) << "s © (ou pas)";
+    cout << "Tous droits r" << char(130) << "serv" << char(130) << "s Â© (ou pas)";
     
     // Score
     setCursorPos(30, 5);
