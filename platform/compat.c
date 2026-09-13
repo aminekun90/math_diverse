@@ -5,6 +5,7 @@
 
 /* system() est redéfini en macro par compat.h : on récupère le vrai. */
 #undef system
+#undef scanf
 
 #include <errno.h>
 #include <fcntl.h>
@@ -56,6 +57,33 @@ static void enterRaw(void)
     raw.c_cc[VTIME] = 0;
     tcsetattr(STDIN_FILENO, TCSANOW, &raw);
     g_rawActive = 1;
+}
+
+/* Rend le terminal a stdio : mode canonique et echo restaures. */
+static void quitterRaw(void)
+{
+    if (g_rawActive && g_termSaved)
+    {
+        tcsetattr(STDIN_FILENO, TCSANOW, &g_savedTermios);
+        g_rawActive = 0;
+    }
+}
+
+int MathDiverseScanf(const char* format, ...)
+{
+    va_list args;
+    int etait_brut = g_rawActive;
+    int r;
+
+    if (etait_brut) quitterRaw();
+    fflush(stdout);
+
+    va_start(args, format);
+    r = vscanf(format, args);
+    va_end(args);
+
+    if (etait_brut) enterRaw();
+    return r;
 }
 
 static int readByteBlocking(void)

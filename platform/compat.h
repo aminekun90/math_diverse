@@ -146,6 +146,13 @@ int MathDiverseSystem(const char* command);
    littéraux du source. */
 int MathDiversePrintf(const char* format, ...);
 #define printf MathDiversePrintf
+
+/* getch() met le terminal en mode brut, sans echo ni edition de ligne.
+   Le programme y saisit ensuite des nombres avec scanf : sans repasser en
+   mode canonique, l'utilisateur ne voit pas ce qu'il tape et ne peut pas
+   corriger. Ce scanf rend le terminal le temps de la lecture. */
+int MathDiverseScanf(const char* format, ...);
+#define scanf MathDiverseScanf
 #define system MathDiverseSystem
 
 #ifdef __cplusplus

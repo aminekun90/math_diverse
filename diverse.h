@@ -62,6 +62,7 @@ int partition(int*, int, int);
 void tri_rapide_bis(int*, int,int);
 void tri_rapide(int*,int);
 int calctri(void);
+int lire_entier(const char* invite, int* sortie);
 //Autres
 int menuautres();
 void multiply(int);//factoriel très amélioré !! 2000!
@@ -93,6 +94,7 @@ unsigned long long produit_mod(unsigned long long a, unsigned long long b, unsig
 unsigned long long puissance_mod(unsigned long long a, unsigned long long e, unsigned long long m);
 int est_premier(long long valeur);
 int lucas_lehmer(int p);
+long long facteur_mersenne(int p, long kmax);
 int mersenne(void);
 int facteurs(void);
 int crible(void);

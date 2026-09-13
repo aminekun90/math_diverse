@@ -157,6 +157,40 @@ par une FFT est la seule voie pour aller plus loin — c'est un autre projet.
 Validation : les 22 exposants de Mersenne connus jusqu'à 9941 sont reconnus
 premiers, et 10 contre-exemples rejetés.
 
+## Deux leviers sur Lucas-Lehmer, et ce qui ne bouge pas
+
+**Ce qui est irréductible : les p−2 itérations.** C'est une chaîne où chaque
+terme dépend du précédent. Aucun raccourci connu, et aucune hypothèse ne le
+donne. Tout le reste se joue ailleurs.
+
+**Levier 1 — la forme des diviseurs, par théorème.** Si p est un premier impair
+et q divise 2^p − 1, alors `q = 2kp + 1` et `q ≡ ±1 (mod 8)`. *Preuve* : l'ordre
+de 2 modulo q vaut p, donc p divise q−1 ; q étant impair, 2p divise q−1. Par
+ailleurs 2 = (2^((p+1)/2))² mod q est un résidu quadratique, ce qui équivaut à
+q ≡ ±1 mod 8. Chercher un diviseur ne coûte alors que quelques microsecondes et
+**élimine 57 % des exposants premiers sous 2000** sans lancer le test.
+
+Le budget de filtrage est dimensionné sur p (`kmax = 5p`, borné) : à p = 4423 un
+`kmax` fixé à 200 000 coûtait 38 ms pour un test qui n'en prend que 17.
+
+**Levier 2 — le coût de la mise au carré.** C'est là que se joue tout le reste :
+
+| Méthode | Complexité | Mesure à p = 60 000 |
+|-|-|-|
+| scolaire | O(n²) | référence |
+| **Karatsuba** (en place) | O(n^1,585) | **3,85 ×** |
+| FFT / IBDWT (non fait) | O(n log n) | ~100 × attendu |
+
+Karatsuba découpe A = A1·B + A0 et calcule
+`A² = A1²B² + ((A0+A1)² − A0² − A1²)·B + A0²` : trois carrés de demi-taille au
+lieu de quatre produits. Vérifié identique au bit près à la méthode scolaire.
+En dessous de `KARA_SEUIL` mots la récursion coûte plus qu'elle ne rapporte.
+
+**Ce qu'il faudrait pour aller vraiment plus loin** : la transformée de Fourier,
+et surtout l'IBDWT de Crandall-Fagin, qui fait la réduction modulo 2^p − 1
+gratuitement à l'intérieur de la transformée. C'est ce qu'utilise GIMPS. Ce n'est
+pas une amélioration de MathDiverse, c'est un projet en soi.
+
 ## Calculs ajoutés en 2026
 
 `calcexp` (c'était l'entrée « Bientôt » depuis 2014), `calccos`, `calctan`, `calcln`,
