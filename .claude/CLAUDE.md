@@ -80,6 +80,17 @@ Windows garde le code d'origine : `cmake -B build -A Win32`.
 Le programme lit `tetris.wav` et `a.xm` dans le répertoire courant ; CMake les
 recopie à côté de l'exécutable.
 
+## L'enveloppe macOS (`macos/`)
+
+`MathDiverse.app` est une fenêtre SwiftUI contenant un émulateur de terminal
+(**SwiftTerm**) dans lequel tourne le binaire. Même montage que
+Tetris-classic — `DEVELOPER_DIR` obligatoire pour le shader Metal, délégué
+séparé plutôt que sous-classe de `LocalProcessTerminalView`.
+
+```bash
+./macos/make-app.sh && open macos/MathDiverse.app
+```
+
 ## Fichiers hors build
 `curl.c`, `download.c` (téléchargement jamais branché), `altconio.h`, `myconio.*`
 (conio de secours pour Dev-C++), `snake/game-ASUS.cpp` (variante) et les binaires
