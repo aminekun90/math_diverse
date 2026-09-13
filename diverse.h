@@ -89,6 +89,13 @@ double serie_cos(double x, int n);
 double serie_exp(double x, int n);
 double serie_ln1p(double x, int n);
 int calctan(void);
+unsigned long long produit_mod(unsigned long long a, unsigned long long b, unsigned long long m);
+unsigned long long puissance_mod(unsigned long long a, unsigned long long e, unsigned long long m);
+int est_premier(long long valeur);
+int lucas_lehmer(int p);
+int mersenne(void);
+int facteurs(void);
+int crible(void);
 /* Calculs ajoutes en 2026 */
 int calcexp(void);
 int calccos(void);

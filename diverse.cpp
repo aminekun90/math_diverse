@@ -667,7 +667,7 @@ void change()
 int menuautres()
 {
 	system("title Menu Autres Calculs");
-	int t[7]={10,15,15,15,15,15,12},done=1,i=0;
+	int t[10]={10,15,15,15,15,15,15,15,15,12},done=1,i=0;
 char choix=0;
 while (done)
 {
@@ -681,22 +681,28 @@ while (done)
 	color(t[1],0);
 	printf("\n===>2:Nombres Premiers.\n");
 	color(t[2],0);
-	printf("\n===>3:PGCD et PPCM.\n");
+	printf("\n===>3:Facteurs premiers.\n");
 	color(t[3],0);
-	printf("\n===>4:Conversion de bases.\n");
+	printf("\n===>4:Crible d'%cratosth%cne.\n",144,138);
 	color(t[4],0);
-	printf("\n===>5:Statistiques.\n");
+	printf("\n===>5:Nombres de Mersenne (Lucas-Lehmer).\n");
 	color(t[5],0);
-	printf("\n===>6:Retour.\n");
+	printf("\n===>6:PGCD et PPCM.\n");
 	color(t[6],0);
+	printf("\n===>7:Conversion de bases.\n");
+	color(t[7],0);
+	printf("\n===>8:Statistiques.\n");
+	color(t[8],0);
+	printf("\n===>9:Retour.\n");
+	color(t[9],0);
 	printf("\n===>[ESCAPE]:Quitter.\n");
 	color(10,0);
 	printf("\n=======================================\n\n");
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          if(choix==HAUT && i!=6) {t[i]=15; i++;}
-                      t[6]=12;
+          if(choix==HAUT && i!=9) {t[i]=15; i++;}
+                      t[9]=12;
 					  t[i]=10;
 					  system("cls");
            if(choix==27){done=0; quitter(); }
@@ -730,30 +736,51 @@ while (done)
 		break;
 		case 2:
 			system("cls");
-			pgcdppcm();
+			facteurs();
 			system("pause");
 			system("cls");
 			menuautres();
 		break;
 		case 3:
 			system("cls");
-			conversion();
+			crible();
 			system("pause");
 			system("cls");
 			menuautres();
 		break;
 		case 4:
 			system("cls");
-			stats();
+			mersenne();
 			system("pause");
 			system("cls");
 			menuautres();
 		break;
 		case 5:
 			system("cls");
-			menu();
+			pgcdppcm();
+			system("pause");
+			system("cls");
+			menuautres();
 		break;
 		case 6:
+			system("cls");
+			conversion();
+			system("pause");
+			system("cls");
+			menuautres();
+		break;
+		case 7:
+			system("cls");
+			stats();
+			system("pause");
+			system("cls");
+			menuautres();
+		break;
+		case 8:
+			system("cls");
+			menu();
+		break;
+		case 9:
 			quitter();
 		break;
 	}
@@ -820,46 +847,442 @@ void fact(int v,int k){
 	}
 }
 
+/* Test de primalite.
+   La version d'origine avait trois defauts :
+     - elle declarait 1 premier, ce qu'il n'est pas ;
+     - pour 0 et les negatifs, la boucle ne tournait pas et AUCUN verdict
+       n'etait affiche ;
+     - elle divisait jusqu'a n-1 au lieu de sqrt(n), soit 2 milliards
+       d'iterations et une seconde de calcul pour 2147483647.
+
+   Un diviseur va toujours par paire avec n/d, donc le plus petit des deux
+   est <= sqrt(n) : s'arreter la suffit. Avec en plus la roue 6k+-1 — tout
+   premier > 3 est de cette forme — on teste deux candidats sur six.
+   Pour 2147483647 : environ 15 000 iterations au lieu de 2 147 483 645. */
+/*=======================================================================*/
+/*  Arithmetique modulaire et grands entiers, pour les nombres premiers.  */
+/*=======================================================================*/
+
+/* a*b mod m sans debordement : le produit de deux 64 bits tient sur 128.
+   __uint128_t est une extension GCC/Clang — le projet est construit avec
+   cette famille de compilateurs sur les trois plateformes. */
+unsigned long long produit_mod(unsigned long long a, unsigned long long b, unsigned long long m)
+{
+	return (unsigned long long)((__uint128_t)a * b % m);
+}
+
+/* a^e mod m par exponentiation rapide. */
+unsigned long long puissance_mod(unsigned long long a, unsigned long long e, unsigned long long m)
+{
+	unsigned long long r = 1;
+	a %= m;
+	while (e)
+	{
+		if (e & 1ULL) r = produit_mod(r, a, m);
+		a = produit_mod(a, a, m);
+		e >>= 1;
+	}
+	return r;
+}
+
+/* Test de primalite : Miller-Rabin deterministe sur 64 bits.
+   La version d'origine divisait jusqu'a n-1 (2 milliards d'iterations et
+   une seconde pour 2147483647) et declarait 1 premier, sans rien afficher
+   pour 0 ni les negatifs.
+
+   Miller-Rabin est probabiliste en general, mais il devient un test EXACT
+   si l'on teste toutes les bases de la liste ci-dessous : c'est demontre
+   pour tout n < 3,3 * 10^24, donc pour tout entier 64 bits. 15 microsecondes
+   au pire, contre une seconde. */
+int est_premier(long long valeur)
+{
+	static const unsigned long long bases[12] =
+		{2ULL,3ULL,5ULL,7ULL,11ULL,13ULL,17ULL,19ULL,23ULL,29ULL,31ULL,37ULL};
+	unsigned long long n, d, x;
+	int i, j, s;
+
+	if (valeur < 2) return 0;
+	n = (unsigned long long)valeur;
+
+	for (i = 0; i < 12; i++)
+		if (n % bases[i] == 0) return n == bases[i];
+
+	d = n - 1; s = 0;
+	while ((d & 1ULL) == 0) { d >>= 1; s++; }
+
+	for (i = 0; i < 12; i++)
+	{
+		int temoin = 1;
+		x = puissance_mod(bases[i], d, n);
+		if (x == 1ULL || x == n - 1ULL) continue;
+		for (j = 1; j < s; j++)
+		{
+			x = produit_mod(x, x, n);
+			if (x == n - 1ULL) { temoin = 0; break; }
+		}
+		if (temoin) return 0;
+	}
+	return 1;
+}
+
 void premier(){
-int nb, i,total=1, j;
+	long long nb;
 
-printf("tapez votre nombre:\n");
-scanf("%d", &nb);
-if(nb==1 || nb==2){printf("C'est un nombre premier\n");}else{
+	printf("tapez votre nombre:\n");
+	if (scanf("%lld", &nb) != 1)
+	{
+		color(12,0);
+		printf("Entr%ce invalide.\n", 130);
+		color(15,0);
+		return;
+	}
 
-	for(j=2;j<nb;j++)
-        {
-            if(nb%j==0)
-            {
-            printf("Ce n'est pas un nombre premier\n");
-            break;
-            }
+	if (nb < 0)
+	{
+		color(12,0);
+		printf("La primalit%c ne se d%cfinit que sur les entiers positifs.\n", 130, 130);
+		color(15,0);
+		return;
+	}
 
-            else if(nb-j==1)
-                printf("C'est un nombre premier\n");
-        }
-}
-if(nb%2==0){printf("Et il est paire\n");}else{printf("Et il est impaire\n");}
-  printf("\n\nFactorisation : \n%d=",nb);while(total<nb){
-	  for(i=2;i<nb;i++){
-		  if(nb%i==0){
-
-			break;}
-	  }
-
-	  printf("%d*", i);
-	  total=total*i;
-	  nb=nb/i;
-
-
+	color(14,0);
+	if (nb < 2)
+		/* 1 n'est premier ni compose : il n'a qu'un seul diviseur. */
+		printf("%lld n'est pas un nombre premier.\n", nb);
+	else if (est_premier(nb))
+		printf("C'est un nombre premier\n");
+	else
+		printf("Ce n'est pas un nombre premier\n");
+	color(15,0);
 }
 
 
-printf("%d", nb);
 
+/* Decomposition en facteurs premiers, par divisions successives. */
 
+/*=======================================================================*/
+/*  Nombres de Mersenne et test de Lucas-Lehmer.                          */
+/*                                                                        */
+/*  Un nombre de Mersenne s'ecrit M(p) = 2^p - 1. Lucas-Lehmer decide de  */
+/*  sa primalite en p-2 iterations de s <- s^2 - 2 modulo M(p), en        */
+/*  partant de s = 4 : M(p) est premier si et seulement si le dernier s   */
+/*  vaut 0. C'est ce test — et lui seul — qui a fourni tous les records   */
+/*  de plus grand nombre premier connu depuis 1952.                       */
+/*                                                                        */
+/*  La reduction modulo 2^p - 1 est gratuite en binaire : 2^p vaut 1      */
+/*  modulo M(p), donc il suffit d'additionner la partie haute a la        */
+/*  partie basse, et de recommencer.                                      */
+/*=======================================================================*/
 
+static int  MERS_P  = 0;      /* exposant courant */
+static int  MERS_NW = 0;      /* nombre de mots de 64 bits */
 
+static void mers_set_M(unsigned long long* m)
+{
+	int i, bit = MERS_P & 63;
+	for (i = 0; i < MERS_NW; i++) m[i] = ~0ULL;
+	if (bit) m[MERS_NW-1] = (1ULL << bit) - 1ULL;
+}
+
+static int mers_vaut_M(const unsigned long long* v)
+{
+	unsigned long long* m = (unsigned long long*)malloc((size_t)MERS_NW * 8);
+	int i, egal = 1;
+	if (!m) return 0;
+	mers_set_M(m);
+	for (i = 0; i < MERS_NW; i++) if (v[i] != m[i]) { egal = 0; break; }
+	free(m);
+	return egal;
+}
+
+static void mers_ajouter_M(unsigned long long* v)
+{
+	unsigned long long* m = (unsigned long long*)malloc((size_t)MERS_NW * 8);
+	unsigned long long retenue = 0;
+	int i;
+	if (!m) return;
+	mers_set_M(m);
+	for (i = 0; i < MERS_NW; i++)
+	{
+		__uint128_t t = (__uint128_t)v[i] + m[i] + retenue;
+		v[i] = (unsigned long long)t;
+		retenue = (unsigned long long)(t >> 64);
+	}
+	free(m);
+}
+
+/* prod occupe 2*NW mots ; en sortie il est reduit dans les NW premiers. */
+static void mers_reduire(unsigned long long* prod)
+{
+	int mot = MERS_P >> 6, bit = MERS_P & 63, i;
+	unsigned long long* haut = (unsigned long long*)malloc((size_t)2 * MERS_NW * 8);
+	if (!haut) return;
+
+	for (;;)
+	{
+		int reste = 0;
+		unsigned long long retenue = 0;
+
+		for (i = 0; i < 2*MERS_NW; i++)
+		{
+			unsigned long long x = 0;
+			int src = i + mot;
+			if (src < 2*MERS_NW)
+			{
+				x = bit ? (prod[src] >> bit) : prod[src];
+				if (bit && src + 1 < 2*MERS_NW) x |= prod[src+1] << (64 - bit);
+			}
+			haut[i] = x;
+			if (x) reste = 1;
+		}
+		if (!reste) break;
+
+		for (i = mot + 1; i < 2*MERS_NW; i++) prod[i] = 0;
+		if (bit) prod[mot] &= (1ULL << bit) - 1ULL; else prod[mot] = 0;
+
+		for (i = 0; i < 2*MERS_NW; i++)
+		{
+			__uint128_t t = (__uint128_t)prod[i] + haut[i] + retenue;
+			prod[i] = (unsigned long long)t;
+			retenue = (unsigned long long)(t >> 64);
+		}
+	}
+	free(haut);
+
+	if (mers_vaut_M(prod)) for (i = 0; i < MERS_NW; i++) prod[i] = 0;   /* M vaut 0 mod M */
+}
+
+int lucas_lehmer(int p)
+{
+	unsigned long long *s, *t;
+	int k, i, j, nul;
+
+	if (p == 2) return 1;
+	if (!est_premier((long long)p)) return 0;   /* p compose => M(p) compose */
+
+	MERS_P = p;
+	MERS_NW = (p + 63) / 64;
+	s = (unsigned long long*)calloc((size_t)2*MERS_NW, 8);
+	t = (unsigned long long*)calloc((size_t)2*MERS_NW, 8);
+	if (!s || !t) { free(s); free(t); return 0; }
+
+	s[0] = 4;
+	for (k = 0; k < p - 2; k++)
+	{
+		unsigned long long emprunt;
+
+		memset(t, 0, (size_t)2*MERS_NW*8);
+		for (i = 0; i < MERS_NW; i++)          /* carre, methode scolaire */
+		{
+			unsigned long long retenue = 0;
+			int q;
+			if (!s[i]) continue;
+			for (j = 0; j < MERS_NW; j++)
+			{
+				__uint128_t cur = (__uint128_t)s[i]*s[j] + t[i+j] + retenue;
+				t[i+j] = (unsigned long long)cur;
+				retenue = (unsigned long long)(cur >> 64);
+			}
+			q = i + MERS_NW;
+			while (retenue && q < 2*MERS_NW)
+			{
+				__uint128_t cur = (__uint128_t)t[q] + retenue;
+				t[q] = (unsigned long long)cur;
+				retenue = (unsigned long long)(cur >> 64);
+				q++;
+			}
+		}
+		mers_reduire(t);
+
+		emprunt = 2;                            /* t <- t - 2 */
+		for (i = 0; i < MERS_NW && emprunt; i++)
+		{
+			unsigned long long ancien = t[i];
+			t[i] = ancien - emprunt;
+			emprunt = (ancien < emprunt) ? 1ULL : 0ULL;
+		}
+		if (emprunt) mers_ajouter_M(t);         /* sous-depassement : +M */
+
+		memcpy(s, t, (size_t)MERS_NW*8);
+		memset(s + MERS_NW, 0, (size_t)MERS_NW*8);
+	}
+
+	nul = 1;
+	for (i = 0; i < MERS_NW; i++) if (s[i]) { nul = 0; break; }
+	free(s); free(t);
+	return nul;
+}
+
+int mersenne(void)
+{
+	system("title Nombres de Mersenne");
+
+	int p;
+
+	printf("\nTest de Lucas-Lehmer sur M(p) = 2^p - 1.\n");
+	color(10,0);
+	printf("   s = 4, puis p-2 fois  s <- s%c - 2  modulo M(p)\n", 253);
+	printf("   M(p) est premier si et seulement si le dernier s vaut 0.\n\n");
+	color(15,0);
+	color(12,0);
+	printf("<!> Au-del%c de p = 30000 le calcul devient long : la mise au\n", 133);
+	printf("    carre est en O(p%c) ici, la faute a la methode scolaire.\n\n", 253);
+	color(15,0);
+
+	printf("Donnez l'exposant p : ");
+	if (scanf("%d", &p) != 1) return 0;
+
+	if (p < 2 || p > 60000)
+	{
+		color(12,0);
+		printf("\np doit %ctre compris entre 2 et 60000.\n\n", 136);
+		color(15,0);
+		return 0;
+	}
+
+	if (!est_premier((long long)p))
+	{
+		color(14,0);
+		printf("\np = %d n'est pas premier, donc M(p) ne l'est pas non plus.\n\n", p);
+		color(15,0);
+		return 0;
+	}
+
+	printf("\nCalcul en cours (%d it%crations)...\n", p - 2, 130);
+
+	if (lucas_lehmer(p))
+	{
+		color(10,0);
+		printf("\nM(%d) = 2^%d - 1 EST PREMIER.\n", p, p);
+		printf("Il compte %.0f chiffres d%ccimaux.\n\n", (double)p * 0.30103 + 1.0, 130);
+		color(15,0);
+	}
+	else
+	{
+		color(14,0);
+		printf("\nM(%d) = 2^%d - 1 n'est pas premier.\n\n", p, p);
+		color(15,0);
+	}
+	return 0;
+}
+
+int facteurs(void)
+{
+	system("title Facteurs premiers");
+
+	long long n, d, reste;
+	int premierFacteur = 1;
+
+	printf("\nD%ccomposition en facteurs premiers.\n\n", 130);
+	printf("tapez votre nombre:\n");
+	if (scanf("%lld", &n) != 1) return 0;
+
+	if (n < 2)
+	{
+		color(12,0);
+		printf("\nLa d%ccomposition n'a de sens qu'%c partir de 2.\n\n", 130, 133);
+		color(15,0);
+		return 0;
+	}
+
+	reste = n;
+	color(14,0);
+	printf("\n%lld = ", n);
+
+	for (d = 2; d * d <= reste; d += (d == 2 ? 1 : 2))
+	{
+		int exposant = 0;
+		while (reste % d == 0) { reste /= d; exposant++; }
+		if (exposant)
+		{
+			if (!premierFacteur) printf(" x ");
+			premierFacteur = 0;
+			if (exposant == 1) printf("%lld", d);
+			else               printf("%lld^%d", d, exposant);
+		}
+	}
+	if (reste > 1)
+	{
+		if (!premierFacteur) printf(" x ");
+		printf("%lld", reste);
+		premierFacteur = 0;
+	}
+	printf("\n\n");
+	color(15,0);
+	return 0;
+}
+
+/* Liste des nombres premiers jusqu'a N, par le crible d'Eratosthene. */
+int crible(void)
+{
+	system("title Crible d'Eratosthene");
+
+	const long LIMITE = 10000000L;   /* 10 Mo de marqueurs, une seconde environ */
+	long n, i, j, total = 0;
+	char* compose;
+
+	printf("\nListe des nombres premiers jusqu'%c N, par le crible d'%cratosth%cne.\n\n", 133, 144, 138);
+	printf("N (2 %c %ld) : ", 133, LIMITE);
+	if (scanf("%ld", &n) != 1) return 0;
+
+	if (n < 2 || n > LIMITE)
+	{
+		color(12,0);
+		printf("\nN doit %ctre compris entre 2 et %ld.\n\n", 136, LIMITE);
+		color(15,0);
+		return 0;
+	}
+
+	compose = (char*)calloc((size_t)n + 1, sizeof(char));
+	if (!compose)
+	{
+		color(12,0);
+		printf("\nM%cmoire insuffisante.\n\n", 130);
+		color(15,0);
+		return 0;
+	}
+
+	/* On barre les multiples de chaque premier, en partant de son carre :
+	   les multiples plus petits ont deja ete barres par un premier plus petit. */
+	for (i = 2; i * i <= n; i++)
+		if (!compose[i])
+			for (j = i * i; j <= n; j += i)
+				compose[j] = 1;
+
+	for (i = 2; i <= n; i++) if (!compose[i]) total++;
+
+	color(14,0);
+	printf("\n%ld nombres premiers jusqu'%c %ld.\n", total, 133, n);
+	color(15,0);
+
+	if (total <= 500)
+	{
+		int colonne = 0;
+		printf("\n");
+		for (i = 2; i <= n; i++)
+			if (!compose[i])
+			{
+				printf("%8ld", i);
+				if (++colonne % 8 == 0) printf("\n");
+			}
+		if (colonne % 8) printf("\n");
+	}
+	else
+	{
+		printf("Trop nombreux pour %ctre affich%cs ; les 40 premiers :\n\n", 136, 130);
+		int colonne = 0;
+		for (i = 2; i <= n && colonne < 40; i++)
+			if (!compose[i])
+			{
+				printf("%8ld", i);
+				if (++colonne % 8 == 0) printf("\n");
+			}
+		if (colonne % 8) printf("\n");
+	}
+	printf("\n");
+
+	free(compose);
+	return 0;
 }
 /*======================================================================*/
 

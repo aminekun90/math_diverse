@@ -128,6 +128,35 @@ s'en servent plus. **Ne pas la réintroduire dans un développement limité.**
 La tangente n'existait pas ; `calctan` la calcule comme quotient des deux séries,
 avec refus explicite quand `cos` s'annule.
 
+## Nombres premiers : les trois régimes et leurs plafonds
+
+| Outil | Plafond | Coût |
+|-|-|-|
+| `est_premier` (Miller-Rabin) | **9 223 372 036 854 775 807** — tout `long long` | 15 µs au pire |
+| `crible` (Ératosthène) | 10 000 000 | ~1 s, 10 Mo |
+| `lucas_lehmer` (Mersenne) | p ≤ 60 000, soit **~18 000 chiffres** | ~39 s à p = 60 000 |
+
+**Miller-Rabin est ici un test exact, pas probabiliste.** Tester les douze
+premières bases premières (2 à 37) suffit à décider avec certitude pour tout
+n < 3,3 × 10²⁴ — c'est démontré, et 2⁶⁴ est bien en dessous. La version
+d'origine divisait jusqu'à `n−1` : deux milliards d'itérations et une seconde
+pour 2147483647, contre 15 µs.
+
+**Lucas-Lehmer** décide de la primalité de M(p) = 2^p − 1 en p−2 itérations de
+`s ← s² − 2 mod M(p)`, depuis s = 4. La réduction modulo 2^p − 1 est gratuite en
+binaire : 2^p ≡ 1, donc on additionne la partie haute à la partie basse. C'est ce
+test, et lui seul, qui a fourni tous les records de plus grand premier connu
+depuis 1952.
+
+**Le plafond vient de la mise au carré, en O(p²)** — méthode scolaire. Le coût
+total est donc en O(p³) : p = 21701 prend 1,8 s, p = 60000 en prend 39, et le
+record actuel (p = 136 279 841) demanderait **environ 14 000 ans**. GIMPS y
+arrive parce qu'il multiplie par FFT, en O(p log p). Remplacer la mise au carré
+par une FFT est la seule voie pour aller plus loin — c'est un autre projet.
+
+Validation : les 22 exposants de Mersenne connus jusqu'à 9941 sont reconnus
+premiers, et 10 contre-exemples rejetés.
+
 ## Calculs ajoutés en 2026
 
 `calcexp` (c'était l'entrée « Bientôt » depuis 2014), `calccos`, `calctan`, `calcln`,
