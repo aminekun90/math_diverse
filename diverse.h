@@ -6,7 +6,10 @@
 //#include <curl/easy.h>
 
 #include<iostream>
+/* MinGW fournissait unistd.h, MSVC non : le projet n'a jamais visé MSVC. */
+#ifndef _MSC_VER
 #include <unistd.h>//sleep();
+#endif
 #include <stdio.h>/*Biblio*/
 #include <stdlib.h>/*standards*/
 #ifndef _WIN32
