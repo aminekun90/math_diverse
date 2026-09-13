@@ -88,9 +88,49 @@ Le tri à bulles et l'indentation trompeuse signalés par clang aux lignes 374 e
 732 **ne sont pas** des bugs : la logique est correcte, seul le formatage
 trompe.
 
+## Limites numériques des séries — mesurées, puis levées
+
+La version d'origine calculait chaque terme par `pow(x,k)/fact2(k)`. Trois
+limites, toutes mesurées avant correction :
+
+| Cas | Avant | Exact |
+|-|-|-|
+| `sin(3600°)` rang 40 | 2,88 × 10²⁴ | ≈ 0 |
+| `sin(36000°)` rang 40 | 7,63 × 10¹⁰⁵ | ≈ 0 |
+| `exp(−20)` rang 60 | 3,43 × 10⁻⁵ | 2,06 × 10⁻⁹ |
+| `exp(−40)` rang 60 | 6,35 × 10¹³ | 4,25 × 10⁻¹⁸ |
+| `fact2(171)` | `inf` | — |
+
+Trois causes distinctes :
+
+1. **`fact2` déborde le `double` au-delà de 170!** Les termes de rang supérieur
+   devenaient `0` par division par l'infini, et la série cessait silencieusement
+   de progresser. Aucun message, aucun NaN — juste un plafond invisible.
+2. **Aucune réduction d'angle.** `sin` et `cos` sont 360-périodiques, mais la
+   série de Taylor est centrée en 0 : pour un grand angle, les termes
+   intermédiaires deviennent énormes et s'annulent mal.
+3. **Annulation catastrophique sur `exp(x)` avec x < 0.** La série alternée perd
+   tous ses chiffres significatifs.
+
+Les corrections, dans `serie_sin`, `serie_cos`, `serie_exp`, `serie_ln1p` et
+`reduire_angle` :
+
+- **calcul par récurrence** — `terme_k = terme_(k−1) × facteur`. Ni puissance ni
+  factorielle n'apparaissent : rien ne peut déborder, et c'est linéaire au lieu
+  de quadratique. `sin(30°)` au rang 1000 marche désormais.
+- **réduction de l'angle** dans ]−180, 180] avant conversion en radians. C'est
+  exact, pas une approximation : la fonction est périodique.
+- **`exp(x)` avec x < 0** calcule `exp(|x|)` puis inverse.
+
+`fact2` est conservée — elle est déclarée dans `diverse.h` — mais les séries ne
+s'en servent plus. **Ne pas la réintroduire dans un développement limité.**
+
+La tangente n'existait pas ; `calctan` la calcule comme quotient des deux séries,
+avec refus explicite quand `cos` s'annule.
+
 ## Calculs ajoutés en 2026
 
-`calcexp` (c'était l'entrée « Bientôt » depuis 2014), `calccos`, `calcln`,
+`calcexp` (c'était l'entrée « Bientôt » depuis 2014), `calccos`, `calctan`, `calcln`,
 `pgcdppcm`, `conversion` (bases 2/8/10/16), `stats` (moyenne, médiane,
 variance, écart-type) et `systeme2` (Cramer). Ils suivent le style de la
 maison : accents en codes CP850 via `%c`, pour rester lisibles sur la console

@@ -82,6 +82,13 @@ int wtab(int*,int*,int,int);
 void change();
 //jeux
 void menujeux();
+/* Series de Taylor par recurrence, sans pow ni factorielle */
+double reduire_angle(double degres);
+double serie_sin(double x, int n);
+double serie_cos(double x, int n);
+double serie_exp(double x, int n);
+double serie_ln1p(double x, int n);
+int calctan(void);
 /* Calculs ajoutes en 2026 */
 int calcexp(void);
 int calccos(void);

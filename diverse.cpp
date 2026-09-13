@@ -895,56 +895,39 @@ double fact2 (double c)
 
 
 int calcsin (void)
-
 {
 	system("title Sinus");
 
-	double x, s,temp;
+	double x, temp, s;
+	int n;
 
-	int i, n;
-color(12,0);
- printf("\n<!> Attention:\nla valeur de x doit %ctre en degr%c.\npi en rad = 180deg\n\n",136,130);
- color(15,0);
-	/* double limit test
-
-	double test = 180;
-
-	printf ("%lf! == %lf\n", test, fact2 (test));
-*/
+	color(12,0);
+	printf("\n<!> La valeur de x doit %ctre en degr%c.\npi en rad = 180deg\n\n", 136, 130);
+	color(15,0);
 
 	printf ("Donnez une valeur pour x \n");
+	if (scanf("%lf", &x) != 1) return 0;
+	temp = x;
+	/* Reduction dans ]-180, 180] : sans elle, sin(3600 deg) rendait 2,9e+24. */
+	x = reduire_angle(x);
 
-	scanf ("%lf", &x);
-	temp=x;
-x=(x*M_PI)/180;
 	printf ("Donnez un entier n \n");
+	if (scanf("%d", &n) != 1) return 0;
+	if (n < 0) { printf("\nLe rang doit %ctre positif.\n", 136); return 0; }
 
-	scanf ("%d", &n);
+	s = serie_sin(x, n);
 
-	s=x;
-
-	for (i=1; i<=n; i++)
-
-	{
-
-		s+=pow (-1, i)*pow (x, 2*i+1)/fact2 ((double) (2*i+1));
-
-	}
-
-	printf ("\nUne valeur approch%ce du sinus de %0.lf par son d%cveloppement limit%c au rang %d est %lf \n", 130,temp,130,130,n, s);
-
-	printf ("La valeur exacte du sinus de %0.lf est %lf\n\n", temp, sin(x));
-
-
-
-	return 0;   /* la fonction est declaree int : sans return, comportement indefini */
+	printf ("\nUne valeur approch%ce du sinus de %0.lf par son d%cveloppement limit%c au rang %d est %lf \n", 130, temp, 130, 130, n, s);
+	printf ("La valeur exacte du sinus de %0.lf est %lf\n", temp, sin(x));
+	printf ("Erreur absolue : %g\n\n", fabs(s - sin(x)));
+	return 0;
 }
 
 /*======================================================================*/
 
 int menudl()
 {
-	int t[6]={10,15,15,15,15,12},done=1,i=0;
+	int t[7]={10,15,15,15,15,15,12},done=1,i=0;
 	system("title Developpement Limite");
 char choix=0;
  while(done){
@@ -971,10 +954,14 @@ char choix=0;
 	color(10,0);
 	printf("\t\t*\n");printf("\t\t\t\t\t\t*\n");
 	color(t[4],0);
-	printf("===>5:Retour.");
+	printf("===>5:D%cveloppement tangente.",130);
+	color(10,0);
+	printf("\t\t*\n");printf("\t\t\t\t\t\t*\n");
+	color(t[5],0);
+	printf("===>6:Retour.");
 	color(10,0);
 	printf("\t\t\t\t\t*\n");printf("\t\t\t\t\t\t*\n");
-	color(t[5],0);
+	color(t[6],0);
 	printf("===>[ESCAPE]:Quitter.");
 	color(10,0);
 	printf("\t\t\t\t*\n");printf("\t\t\t\t\t\t*");
@@ -983,8 +970,8 @@ char choix=0;
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          if(choix==HAUT && i!=5) {t[i]=15; i++;}
-            t[5]=12;
+          if(choix==HAUT && i!=6) {t[i]=15; i++;}
+            t[6]=12;
 			t[i]=10;
 			system("cls");
           if(choix==27){done=0; quitter(); }
@@ -1022,9 +1009,16 @@ char choix=0;
 		break;
 		case 4:
 			system("cls");
-			menu();
+			calctan();
+			system("pause");
+			system("cls");
+			menudl();
 		break;
 		case 5:
+			system("cls");
+			menu();
+		break;
+		case 6:
 			quitter();
 		break;
 		default:
@@ -1344,6 +1338,86 @@ void color(int t,int f)
 }
 
 /*=======================================================================*/
+/*  Series de Taylor : calcul par recurrence, et reduction de l'angle.    */
+/*                                                                        */
+/*  La version d'origine calculait chaque terme par pow(x,k)/fact2(k).    */
+/*  Trois limites mesurees :                                              */
+/*    - fact2 deborde le double au-dela de 170! : les termes de rang      */
+/*      superieur devenaient 0 et la serie cessait de progresser ;        */
+/*    - sans reduction d'angle, sin(3600 deg) rendait 2,9e+24 au lieu     */
+/*      de 0 — les termes intermediaires enormes s'annulent mal ;         */
+/*    - exp(-20) rendait 4,99e-09 au lieu de 2,06e-09, soit 142 %         */
+/*      d'erreur, par la meme annulation catastrophique.                  */
+/*                                                                        */
+/*  La recurrence terme_k = terme_(k-1) * facteur ne calcule jamais ni    */
+/*  puissance ni factorielle : rien ne deborde, et c'est lineaire.        */
+/*=======================================================================*/
+
+/* Ramene un angle en degres dans ]-180, 180], puis le convertit en radians.
+   sin et cos sont 360-periodiques : c'est exact, pas une approximation. */
+double reduire_angle(double degres)
+{
+	double r = fmod(degres, 360.0);
+	if (r >  180.0) r -= 360.0;
+	if (r <= -180.0) r += 360.0;
+	return (r * M_PI) / 180.0;
+}
+
+/* sin(x) = x - x^3/3! + x^5/5! - ...   terme_k = terme_(k-1) * -x^2/((2k)(2k+1)) */
+double serie_sin(double x, int n)
+{
+	double terme = x, somme = x;
+	int k;
+	for (k = 1; k <= n; k++)
+	{
+		terme *= -(x * x) / ((2.0 * k) * (2.0 * k + 1.0));
+		somme += terme;
+	}
+	return somme;
+}
+
+/* cos(x) = 1 - x^2/2! + x^4/4! - ...   terme_k = terme_(k-1) * -x^2/((2k-1)(2k)) */
+double serie_cos(double x, int n)
+{
+	double terme = 1.0, somme = 1.0;
+	int k;
+	for (k = 1; k <= n; k++)
+	{
+		terme *= -(x * x) / ((2.0 * k - 1.0) * (2.0 * k));
+		somme += terme;
+	}
+	return somme;
+}
+
+/* exp(x) = 1 + x + x^2/2! + ...   terme_k = terme_(k-1) * x/k
+   Pour x < 0 on calcule exp(|x|) puis on inverse : la serie alternee perd
+   sinon tous ses chiffres significatifs par annulation. */
+double serie_exp(double x, int n)
+{
+	double ax = fabs(x), terme = 1.0, somme = 1.0;
+	int k;
+	for (k = 1; k <= n; k++)
+	{
+		terme *= ax / (double)k;
+		somme += terme;
+	}
+	return (x < 0.0) ? 1.0 / somme : somme;
+}
+
+/* ln(1+x) = x - x^2/2 + x^3/3 - ...   converge sur ]-1, 1] */
+double serie_ln1p(double x, int n)
+{
+	double puissance = x, somme = 0.0;
+	int k;
+	for (k = 1; k <= n; k++)
+	{
+		somme += ((k % 2) ? puissance : -puissance) / (double)k;
+		puissance *= x;
+	}
+	return somme;
+}
+
+/*=======================================================================*/
 /*  Calculs ajoutes en 2026 — meme style que l'existant : accents ecrits  */
 /*  en codes CP850 via %c, pour rester lisibles sur la console Windows    */
 /*  comme sur un terminal UTF-8.                                          */
@@ -1355,8 +1429,8 @@ int calcexp(void)
 {
 	system("title Developpement exponentielle");
 
-	double x, s = 1.0;
-	int i, n;
+	double x, s;
+	int n;
 
 	printf("\nD%cveloppement limit%c de exp(x) en 0 :\n", 130, 130);
 	color(10,0);
@@ -1364,18 +1438,18 @@ int calcexp(void)
 	color(15,0);
 
 	printf("Donnez une valeur pour x \n");
-	scanf("%lf", &x);
+	if (scanf("%lf", &x) != 1) return 0;
 	printf("Donnez un entier n \n");
-	scanf("%d", &n);
-
+	if (scanf("%d", &n) != 1) return 0;
 	if (n < 0) { printf("\nLe rang doit %ctre positif.\n", 136); return 0; }
 
-	for (i = 1; i <= n; i++)
-		s += pow(x, i) / fact2((double)i);
+	/* Pour x < 0, serie_exp calcule exp(|x|) puis inverse : la serie
+	   alternee perdait sinon tous ses chiffres (exp(-20) etait faux de 142 %). */
+	s = serie_exp(x, n);
 
-	printf("\nUne valeur approch%ce de exp(%g) par son d%cveloppement limit%c au rang %d est %lf\n",
+	printf("\nUne valeur approch%ce de exp(%g) par son d%cveloppement limit%c au rang %d est %g\n",
 	       130, x, 130, 130, n, s);
-	printf("La valeur exacte de exp(%g) est %lf\n", x, exp(x));
+	printf("La valeur exacte de exp(%g) est %g\n", x, exp(x));
 	printf("Erreur absolue : %g\n\n", fabs(s - exp(x)));
 	return 0;
 }
@@ -1385,29 +1459,28 @@ int calccos(void)
 {
 	system("title Developpement cosinus");
 
-	double x, temp, s = 1.0;
-	int i, n;
+	double x, temp, s;
+	int n;
 
 	color(12,0);
-	printf("\n<!> Attention:\nla valeur de x doit %ctre en degr%c.\npi en rad = 180deg\n\n", 136, 130);
+	printf("\n<!> La valeur de x doit %ctre en degr%c.\npi en rad = 180deg\n\n", 136, 130);
 	color(15,0);
 
 	printf("Donnez une valeur pour x \n");
-	scanf("%lf", &x);
+	if (scanf("%lf", &x) != 1) return 0;
 	temp = x;
-	x = (x * M_PI) / 180;
+	x = reduire_angle(x);
 
 	printf("Donnez un entier n \n");
-	scanf("%d", &n);
-
+	if (scanf("%d", &n) != 1) return 0;
 	if (n < 0) { printf("\nLe rang doit %ctre positif.\n", 136); return 0; }
 
-	for (i = 1; i <= n; i++)
-		s += pow(-1, i) * pow(x, 2*i) / fact2((double)(2*i));
+	s = serie_cos(x, n);
 
 	printf("\nUne valeur approch%ce du cosinus de %0.lf par son d%cveloppement limit%c au rang %d est %lf\n",
 	       130, temp, 130, 130, n, s);
-	printf("La valeur exacte du cosinus de %0.lf est %lf\n\n", temp, cos(x));
+	printf("La valeur exacte du cosinus de %0.lf est %lf\n", temp, cos(x));
+	printf("Erreur absolue : %g\n\n", fabs(s - cos(x)));
 	return 0;
 }
 
@@ -1417,8 +1490,8 @@ int calcln(void)
 {
 	system("title Developpement logarithme");
 
-	double x, s = 0.0;
-	int i, n;
+	double x, s;
+	int n;
 
 	printf("\nD%cveloppement limit%c de ln(1+x) en 0 :\n", 130, 130);
 	color(10,0);
@@ -1429,7 +1502,7 @@ int calcln(void)
 	color(15,0);
 
 	printf("Donnez une valeur pour x \n");
-	scanf("%lf", &x);
+	if (scanf("%lf", &x) != 1) return 0;
 
 	if (x <= -1.0 || x > 1.0)
 	{
@@ -1440,11 +1513,10 @@ int calcln(void)
 	}
 
 	printf("Donnez un entier n \n");
-	scanf("%d", &n);
+	if (scanf("%d", &n) != 1) return 0;
 	if (n < 1) { printf("\nLe rang doit valoir au moins 1.\n"); return 0; }
 
-	for (i = 1; i <= n; i++)
-		s += pow(-1, i+1) * pow(x, i) / (double)i;
+	s = serie_ln1p(x, n);
 
 	printf("\nUne valeur approch%ce de ln(1+%g) au rang %d est %lf\n", 130, x, n, s);
 	printf("La valeur exacte est %lf\n", log(1.0 + x));
@@ -1453,6 +1525,47 @@ int calcln(void)
 }
 
 /* PGCD par l'algorithme d'Euclide, PPCM par a*b/pgcd. */
+/* Tangente : quotient des deux series. Il n'y en avait pas jusqu'ici. */
+int calctan(void)
+{
+	system("title Developpement tangente");
+
+	double x, temp, sc, cc, s;
+	int n;
+
+	color(12,0);
+	printf("\n<!> La valeur de x doit %ctre en degr%c.\n", 136, 130);
+	printf("tan n'est pas d%cfinie en 90 deg modulo 180.\n\n", 130);
+	color(15,0);
+
+	printf("Donnez une valeur pour x \n");
+	if (scanf("%lf", &x) != 1) return 0;
+	temp = x;
+	x = reduire_angle(x);
+
+	printf("Donnez un entier n \n");
+	if (scanf("%d", &n) != 1) return 0;
+	if (n < 0) { printf("\nLe rang doit %ctre positif.\n", 136); return 0; }
+
+	sc = serie_sin(x, n);
+	cc = serie_cos(x, n);
+
+	if (fabs(cc) < 1e-12)
+	{
+		color(12,0);
+		printf("\ncos(%0.lf) vaut 0 : la tangente n'est pas d%cfinie.\n\n", temp, 130);
+		color(15,0);
+		return 0;
+	}
+
+	s = sc / cc;
+
+	printf("\nUne valeur approch%ce de la tangente de %0.lf au rang %d est %lf\n", 130, temp, n, s);
+	printf("La valeur exacte de la tangente de %0.lf est %lf\n", temp, tan(x));
+	printf("Erreur absolue : %g\n\n", fabs(s - tan(x)));
+	return 0;
+}
+
 int pgcdppcm(void)
 {
 	system("title PGCD et PPCM");
