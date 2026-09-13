@@ -48,6 +48,10 @@ static void enterRaw(void)
 
     raw = g_savedTermios;
     raw.c_lflag &= ~(ICANON | ECHO);
+    /* Sans ICRNL, la touche Entree arrive en CR (13) comme sous Windows.
+       Avec, le tty la convertit en LF (10) et le menu, qui compare a 13,
+       ne la reconnait pas. */
+    raw.c_iflag &= ~(ICRNL | INLCR);
     raw.c_cc[VMIN]  = 1;
     raw.c_cc[VTIME] = 0;
     tcsetattr(STDIN_FILENO, TCSANOW, &raw);
@@ -165,6 +169,7 @@ int getch(void)
 
     c = readByteBlocking();
     if (c < 0) return -1;
+    if (c == '\n') return '\r';   /* getch de Windows rend 13 pour Entree */
     if (c != 27) return c;
 
     /* Séquence d'échappement : lecture immédiate, les octets suivants sont

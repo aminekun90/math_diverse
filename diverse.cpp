@@ -18,6 +18,7 @@ int quitter()
 			printf(".");
 
 			exit(0);//quitter
+	return 0;   /* la fonction est declaree int : sans return, comportement indefini */
 }
 int menu()
 {
@@ -107,11 +108,12 @@ system("title MathDiverse");
 	}//While
 
 
+	return 0;   /* la fonction est declaree int : sans return, comportement indefini */
 }
 int menueq()
 {
 	system("title Menu Equations");
-	int t[4]={10,15,15,12},done=1,i=0;
+	int t[5]={10,15,15,15,12},done=1,i=0;
 char choix=0;
 while (done)
 {
@@ -131,10 +133,14 @@ while (done)
 	color(10,0);
 	printf("\t\t\t*\n");printf("\t\t\t\t\t\t*\n");
 	color(t[2],0);
-	printf("===>3:Retour.");
+	printf("===>3:Syst%cme 2x2 (Cramer).",138);
+	color(10,0);
+	printf("\t\t\t*\n");printf("\t\t\t\t\t\t*\n");
+	color(t[3],0);
+	printf("===>4:Retour.");
 	color(10,0);
 	printf("\t\t\t\t\t*\n");printf("\t\t\t\t\t\t*\n");
-	color(t[3],0);
+	color(t[4],0);
 	printf("===>[ESCAPE]:Quitter.");
 	color(10,0);
 	printf("\t\t\t\t*\n");printf("\t\t\t\t\t\t*");
@@ -144,13 +150,9 @@ while (done)
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
-          on descend le curseur dans le menu*/
-          if(choix==HAUT && i!=3) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
-           t[3]=12; t[i]=10;
+          if(choix==HAUT && i!=4) {t[i]=15; i++;}
+           t[4]=12; t[i]=10;
 		   system("cls");
-			//on bouge le  curseur dans le menu
 			if(choix==27){done=0; quitter(); }
 	if(choix==OK)
 	{
@@ -158,25 +160,38 @@ while (done)
 	switch(i)
 	{
 		case 0:
+			system("cls");
 			eq1();
 		break;
 		case 1:
+			system("cls");
 			eq2();
 		break;
 		case 2:
 			system("cls");
-			menu();
+			systeme2();
+			system("pause");
+			system("cls");
+			menueq();
 		break;
 		case 3:
-			done=0;
-			quitter();
-			return EXIT_SUCCESS;
+			system("cls");
+			menu();
 		break;
-
-	}//switch
+		case 4:
+			quitter();
+		break;
+		default:
+			printf("\nError 01\n\a");
+			system("pause");
+			system("cls");
+			menueq();
+		break;
+	}//Switch
 	done=0;
-		}//if
-	}//while
+	}//If
+}//while
+	return 0;
 }
 
 int eq1()
@@ -189,19 +204,27 @@ printf("\nVotre Equation est sous la forme ax+b=0");
 printf("\nDonnez a ensuite b\n");
 scanf("%f%f",&a,&b);
 printf("a=%0.f ; b=%0.f",a,b);
-if (a==0||b==0){
 
-	printf("\nLa solution c'est 0 si b=0 sinon Erreur si a=0 !\n");
-
-} else if(b<0)
+/* Corrige deux bugs d'origine :
+   - result n'etait affecte que si b != 0, et etait affiche non initialise
+     dans tous les autres cas ;
+   - le message confondait les trois cas degeneres. Avec a != 0 et b == 0,
+     la solution est x = 0, ce n'est pas une erreur. */
+if (a == 0)
 {
-	result=(-b)/a;
+	color(12,0);
+	if (b == 0)
+		printf("\n0 = 0 : tout reel est solution.\n");
+	else
+		printf("\n%0.f = 0 est impossible : aucune solution.\n", b);
+	color(15,0);
+	system("pause");
+	system("cls");
+	menueq();
+	return 0;
+}
 
-}
-else if(b>0)
-{
-	 result=(-b)/a;
-}
+result = (-b) / a;
 printf("\nLe resultat est : %f\n",result);
 weq(a,b,0,result,0,1);//weq(a,b,c,x1,x2,param);
 system("pause");
@@ -218,13 +241,26 @@ int eq2()
 	printf("Donner a et b et c:\n");
 	scanf("%f%f%f",&a,&b,&c);
 	printf("\na=%0.f ; b=%0.f ; c=%0.f\n",a,b,c);
+	/* a == 0 : ce n'est plus une equation du second degre, et 2*a au
+	   denominateur diviserait par zero. */
+	if (a == 0)
+	{
+		color(12,0);
+		printf("\na vaut 0 : l'equation est du premier degre.\n");
+		color(15,0);
+		system("pause");
+		system("cls");
+		eq1();
+		return 0;
+	}
+
 	d=pow(b,2)-4*a*c;
 	if(d>0)
 	{
 		printf("\nLes solution reelles:\n");
 		color(14,0);
-		x1=(-b+sqrt(d))/2*a;
-		x2=(-b-sqrt(d))/2*a;
+		x1=(-b+sqrt(d))/(2*a);   /* et non /2*a : (x/2)*a n'est pas x/(2a) */
+		x2=(-b-sqrt(d))/(2*a);
 		printf(" \nx1=%f\nx2=%f\n\n",x1,x2);
 			weq(a,b,c,x1,x2,2);//weq(a,b,c,x1,x2,param);
 		color(15,0);
@@ -241,8 +277,8 @@ int eq2()
 
 		printf("\nSolution Unique:\n");
 		color(14,0);
-		printf("   %f\n\n",-b/2*a);
-		x1=-b/2*a;
+		printf("   %f\n\n",-b/(2*a));
+		x1=-b/(2*a);
 		weq(a,b,c,x1,0,4);//weq(a,b,c,x1,x2,param);
 		color(15,0);
 	}
@@ -250,6 +286,7 @@ int eq2()
 	system("pause");
 	system("cls");
 	menueq();
+	return 0;   /* la fonction est declaree int : sans return, comportement indefini */
 }
 void calcdet(void)
 {
@@ -630,7 +667,7 @@ void change()
 int menuautres()
 {
 	system("title Menu Autres Calculs");
-	int t[4]={10,15,15,12},done=1,i=0;
+	int t[7]={10,15,15,15,15,15,12},done=1,i=0;
 char choix=0;
 while (done)
 {
@@ -644,61 +681,47 @@ while (done)
 	color(t[1],0);
 	printf("\n===>2:Nombres Premiers.\n");
 	color(t[2],0);
-	printf("\n===>3:Retour.\n");
+	printf("\n===>3:PGCD et PPCM.\n");
 	color(t[3],0);
+	printf("\n===>4:Conversion de bases.\n");
+	color(t[4],0);
+	printf("\n===>5:Statistiques.\n");
+	color(t[5],0);
+	printf("\n===>6:Retour.\n");
+	color(t[6],0);
 	printf("\n===>[ESCAPE]:Quitter.\n");
 	color(10,0);
 	printf("\n=======================================\n\n");
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
-          on descend le curseur dans le menu*/
-          if(choix==HAUT && i!=3) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
-                      t[3]=12;
+          if(choix==HAUT && i!=6) {t[i]=15; i++;}
+                      t[6]=12;
 					  t[i]=10;
-					  system("cls");//on bouge le  curseur dans le menu
+					  system("cls");
            if(choix==27){done=0; quitter(); }
 	if(choix==OK)
 	{
 
 	switch(i)
 	{
-
-		case 0: system("cls");
-			color(15,12);
-
-			printf("\n<!>Attention : N'utilisez pas le calcul de factoriel plus d'une fois dans\n la m%cme session utilisation=%d\n",136,amine);
-
-			color(15,0);
-          	if(amine==0){
-          		change();
-          	int k;
+		case 0:
+		{
+			system("cls");
+			/* Le garde-fou « une seule fois par session » a saute avec la
+			   correction du tampon global dans fact() : le calcul est
+			   maintenant rejouable autant de fois qu'on veut. */
+			int k;
 			printf("Entrer le nombre que vous vouler savoir son factoriel :\n");
-          scanf("%d",&k);
-			fact(FALSE,k);
+			if (scanf("%d",&k) == 1)
+				fact(FALSE,k);
 			system("pause");
 			system("cls");
 			menuautres();
-
-		}else{
-			change();
-			color(2,0);
-	printf("\nLe probl%cme sera corrig%cs dans les prochaines mises %c jour !\n",138,130,133);
-	printf("\nLe Programme va red%cmarrer.",133);
-	Sleep(1000);
-	printf(".");
-	Sleep(1000);
-	printf(".");
-	color(15,0);
-	system("start MathDiverse.exe");
-		exit(0);//quitter
-				}
+		}
 		break;
 		case 1:
 			system("cls");
-
 			premier();
 			printf("\n\n");
 			system("pause");
@@ -707,19 +730,38 @@ while (done)
 		break;
 		case 2:
 			system("cls");
-			menu();
+			pgcdppcm();
+			system("pause");
+			system("cls");
+			menuautres();
 		break;
 		case 3:
+			system("cls");
+			conversion();
+			system("pause");
+			system("cls");
+			menuautres();
+		break;
+		case 4:
+			system("cls");
+			stats();
+			system("pause");
+			system("cls");
+			menuautres();
+		break;
+		case 5:
+			system("cls");
+			menu();
+		break;
+		case 6:
 			quitter();
 		break;
-
-
-
 	}
 	done=0;
     }
 
 	}
+	return 0;
 }
 
 void multiply(int k)
@@ -749,50 +791,34 @@ void multiply(int k)
 void fact(int v,int k){
 	system("title Factorielle");
 
-			   //problem de fuite memoire !! il faut trouver une solution
-   int taillet = 1001;
-   int p = MAX,i,j;
-   char ** f=NULL;
-   //char * n=NULL;
-   //n=(char*)calloc(p,sizeof(char));
-   f = (char**)calloc (taillet,sizeof(char *));
-   for (i = 1; i < taillet; i++)
-   {
-      f[i] = (char*)calloc (p,sizeof(char));
+	/* Corrige la limitation que l'auteur avait notee : « N'utilisez pas le
+	   calcul de factoriel plus d'une fois dans la meme session ».
+	   La cause etait le tampon global n, jamais remis a "1" entre deux
+	   appels : le second calcul repartait de 1000! et donnait n'importe quoi.
 
-   }
-			// for(i=1;i<taillet;i++)
-			 //	f[i]="1";
+	   Au passage, on ne calcule plus systematiquement les 1000 premieres
+	   factorielles ni ne reserve 2,6 Mo pour n'en afficher qu'une seule. */
+	const int MAX_FACT = 1000;
+	int i;
 
+	if (k < 0 || k > MAX_FACT)
+	{
+		color(12,0);
+		printf("\nLe rang doit %ctre compris entre 0 et %d.\n\n", 136, MAX_FACT);
+		color(15,0);
+		return;
+	}
 
-         for(i=1;i<=1000;i++){
-          multiply(i);
+	strcpy(n, "1");              /* <- la correction */
+	for (i = 2; i <= k; i++)
+		multiply(i);
 
-          strcpy(f[i],n);
-
-         }
-
-          if (v==FALSE)
-          {
-          printf("%d!\n",k);
-          puts(f[k]);
-        	//printf("%s\n",f[k]);
-        	for (i =0; i < taillet; i++)
- 			 {
- 			 free (f[i]);
- 			 f[i]=NULL;
- 			 }
-			 free (f);
-			f=NULL;
-
-          }else{
-
-          //return (intptr_t)f[k];
-		  }
-		 //free(n);
-
-
-         }
+	if (v == FALSE)
+	{
+		printf("%d!\n", k);
+		puts(n);
+	}
+}
 
 void premier(){
 int nb, i,total=1, j;
@@ -911,14 +937,15 @@ x=(x*M_PI)/180;
 
 
 
+	return 0;   /* la fonction est declaree int : sans return, comportement indefini */
 }
 
 /*======================================================================*/
 
 int menudl()
 {
-	int t[4]={10,15,15,12},done=1,i=0;
-	system("title Développement Limité");
+	int t[6]={10,15,15,15,15,12},done=1,i=0;
+	system("title Developpement Limite");
 char choix=0;
  while(done){
 	color(10,0);
@@ -932,14 +959,22 @@ char choix=0;
 	color(10,0);
 	printf("\t\t\t*\n");printf("\t\t\t\t\t\t*\n");
 	color(t[1],0);
-	printf("===>2:D%cveloppement exp.(Bient%ct)",144,147);
+	printf("===>2:D%cveloppement exp.",130);
+	color(10,0);
+	printf("\t\t\t*\n");printf("\t\t\t\t\t\t*\n");
+	color(t[2],0);
+	printf("===>3:D%cveloppement cosinus.",130);
 	color(10,0);
 	printf("\t\t*\n");printf("\t\t\t\t\t\t*\n");
-	color(t[2],0);
-	printf("===>3:Retour.");
+	color(t[3],0);
+	printf("===>4:D%cveloppement ln(1+x).",130);
+	color(10,0);
+	printf("\t\t*\n");printf("\t\t\t\t\t\t*\n");
+	color(t[4],0);
+	printf("===>5:Retour.");
 	color(10,0);
 	printf("\t\t\t\t\t*\n");printf("\t\t\t\t\t\t*\n");
-	color(t[3],0);
+	color(t[5],0);
 	printf("===>[ESCAPE]:Quitter.");
 	color(10,0);
 	printf("\t\t\t\t*\n");printf("\t\t\t\t\t\t*");
@@ -948,15 +983,12 @@ char choix=0;
 	color(15,0);
 	choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zéro
-          on descend le curseur dans le menu*/
-          if(choix==HAUT && i!=3) {t[i]=15; i++;}
-          /*la méme chose avec haut*/
-            t[3]=12;
+          if(choix==HAUT && i!=5) {t[i]=15; i++;}
+            t[5]=12;
 			t[i]=10;
-			system("cls");//on bouge le  curseur dans le menu
+			system("cls");
           if(choix==27){done=0; quitter(); }
-	if(choix==OK)//si l'utilisateur a cliqué sur entreé
+	if(choix==OK)
           {
 	switch(i)
 	{
@@ -969,27 +1001,43 @@ char choix=0;
 		break;
 		case 1:
 			system("cls");
+			calcexp();
+			system("pause");
+			system("cls");
 			menudl();
 		break;
 		case 2:
 			system("cls");
-			menu();
+			calccos();
+			system("pause");
+			system("cls");
+			menudl();
 		break;
 		case 3:
+			system("cls");
+			calcln();
+			system("pause");
+			system("cls");
+			menudl();
+		break;
+		case 4:
+			system("cls");
+			menu();
+		break;
+		case 5:
 			quitter();
 		break;
 		default:
 			printf("\nError 01\n\a");
 			system("pause");
 			system("cls");
-			menueq();
+			menudl();
 		break;
-
-
 	}//Switch
 	done=0;
 	}//If
 	}//while
+	return 0;
 }
 
 
@@ -1294,12 +1342,303 @@ void color(int t,int f)
         HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
     	SetConsoleTextAttribute(H,f*16+t);
 }
+
+/*=======================================================================*/
+/*  Calculs ajoutes en 2026 — meme style que l'existant : accents ecrits  */
+/*  en codes CP850 via %c, pour rester lisibles sur la console Windows    */
+/*  comme sur un terminal UTF-8.                                          */
+/*=======================================================================*/
+
+/* Developpement limite de exp(x) au rang n : somme des x^k / k!
+   C'etait l'entree « Bientot » du menu depuis 2014. */
+int calcexp(void)
+{
+	system("title Developpement exponentielle");
+
+	double x, s = 1.0;
+	int i, n;
+
+	printf("\nD%cveloppement limit%c de exp(x) en 0 :\n", 130, 130);
+	color(10,0);
+	printf("   exp(x) = 1 + x + x%c/2! + x%c/3! + ...\n\n", 253, 179);
+	color(15,0);
+
+	printf("Donnez une valeur pour x \n");
+	scanf("%lf", &x);
+	printf("Donnez un entier n \n");
+	scanf("%d", &n);
+
+	if (n < 0) { printf("\nLe rang doit %ctre positif.\n", 136); return 0; }
+
+	for (i = 1; i <= n; i++)
+		s += pow(x, i) / fact2((double)i);
+
+	printf("\nUne valeur approch%ce de exp(%g) par son d%cveloppement limit%c au rang %d est %lf\n",
+	       130, x, 130, 130, n, s);
+	printf("La valeur exacte de exp(%g) est %lf\n", x, exp(x));
+	printf("Erreur absolue : %g\n\n", fabs(s - exp(x)));
+	return 0;
+}
+
+/* Developpement limite de cos(x) : somme des (-1)^k x^(2k) / (2k)! */
+int calccos(void)
+{
+	system("title Developpement cosinus");
+
+	double x, temp, s = 1.0;
+	int i, n;
+
+	color(12,0);
+	printf("\n<!> Attention:\nla valeur de x doit %ctre en degr%c.\npi en rad = 180deg\n\n", 136, 130);
+	color(15,0);
+
+	printf("Donnez une valeur pour x \n");
+	scanf("%lf", &x);
+	temp = x;
+	x = (x * M_PI) / 180;
+
+	printf("Donnez un entier n \n");
+	scanf("%d", &n);
+
+	if (n < 0) { printf("\nLe rang doit %ctre positif.\n", 136); return 0; }
+
+	for (i = 1; i <= n; i++)
+		s += pow(-1, i) * pow(x, 2*i) / fact2((double)(2*i));
+
+	printf("\nUne valeur approch%ce du cosinus de %0.lf par son d%cveloppement limit%c au rang %d est %lf\n",
+	       130, temp, 130, 130, n, s);
+	printf("La valeur exacte du cosinus de %0.lf est %lf\n\n", temp, cos(x));
+	return 0;
+}
+
+/* Developpement limite de ln(1+x) : somme des (-1)^(k+1) x^k / k
+   Ne converge que sur ]-1, 1]. */
+int calcln(void)
+{
+	system("title Developpement logarithme");
+
+	double x, s = 0.0;
+	int i, n;
+
+	printf("\nD%cveloppement limit%c de ln(1+x) en 0 :\n", 130, 130);
+	color(10,0);
+	printf("   ln(1+x) = x - x%c/2 + x%c/3 - ...\n", 253, 179);
+	color(15,0);
+	color(12,0);
+	printf("<!> La s%crie ne converge que pour -1 < x <= 1\n\n", 130);
+	color(15,0);
+
+	printf("Donnez une valeur pour x \n");
+	scanf("%lf", &x);
+
+	if (x <= -1.0 || x > 1.0)
+	{
+		color(12,0);
+		printf("\nx = %g est hors du domaine de convergence.\n\n", x);
+		color(15,0);
+		return 0;
+	}
+
+	printf("Donnez un entier n \n");
+	scanf("%d", &n);
+	if (n < 1) { printf("\nLe rang doit valoir au moins 1.\n"); return 0; }
+
+	for (i = 1; i <= n; i++)
+		s += pow(-1, i+1) * pow(x, i) / (double)i;
+
+	printf("\nUne valeur approch%ce de ln(1+%g) au rang %d est %lf\n", 130, x, n, s);
+	printf("La valeur exacte est %lf\n", log(1.0 + x));
+	printf("Erreur absolue : %g\n\n", fabs(s - log(1.0 + x)));
+	return 0;
+}
+
+/* PGCD par l'algorithme d'Euclide, PPCM par a*b/pgcd. */
+int pgcdppcm(void)
+{
+	system("title PGCD et PPCM");
+
+	long a, b, x, y, r, pgcd;
+
+	printf("\nCalcul du PGCD et du PPCM de deux entiers.\n\n");
+	printf("Donnez a et b \n");
+	if (scanf("%ld %ld", &a, &b) != 2) { printf("\nEntr%ce invalide.\n", 130); return 0; }
+
+	if (a == 0 && b == 0)
+	{
+		color(12,0);
+		printf("\nPGCD(0,0) n'est pas d%cfini.\n\n", 130);
+		color(15,0);
+		return 0;
+	}
+
+	x = a < 0 ? -a : a;
+	y = b < 0 ? -b : b;
+
+	/* Euclide : le PGCD est le dernier reste non nul. */
+	while (y != 0) { r = x % y; x = y; y = r; }
+	pgcd = x;
+
+	color(14,0);
+	printf("\nPGCD(%ld, %ld) = %ld\n", a, b, pgcd);
+	if (a != 0 && b != 0)
+		printf("PPCM(%ld, %ld) = %ld\n\n", a, b, (a / pgcd) * (b < 0 ? -b : b));
+	else
+		printf("PPCM(%ld, %ld) = 0\n\n", a, b);
+	color(15,0);
+	return 0;
+}
+
+/* Conversion d'un entier entre les bases 2, 8, 10 et 16. */
+int conversion(void)
+{
+	system("title Conversion de bases");
+
+	static const char* digits = "0123456789ABCDEF";
+	char saisie[65], sortie[70];
+	long valeur = 0;
+	int base_in, base_out, i, len = 0;
+
+	printf("\nConversion d'un entier positif entre bases.\n\n");
+	printf("Base de d%cpart (2, 8, 10 ou 16) : ", 130);
+	if (scanf("%d", &base_in) != 1) return 0;
+	if (base_in != 2 && base_in != 8 && base_in != 10 && base_in != 16)
+	{ color(12,0); printf("\nBase non support%ce.\n\n", 130); color(15,0); return 0; }
+
+	printf("Nombre : ");
+	if (scanf("%64s", saisie) != 1) return 0;
+
+	for (i = 0; saisie[i]; i++)
+	{
+		char c = saisie[i];
+		int chiffre;
+		if      (c >= '0' && c <= '9') chiffre = c - '0';
+		else if (c >= 'a' && c <= 'f') chiffre = c - 'a' + 10;
+		else if (c >= 'A' && c <= 'F') chiffre = c - 'A' + 10;
+		else chiffre = 99;
+
+		if (chiffre >= base_in)
+		{
+			color(12,0);
+			printf("\n'%c' n'est pas un chiffre valide en base %d.\n\n", c, base_in);
+			color(15,0);
+			return 0;
+		}
+		valeur = valeur * base_in + chiffre;
+	}
+
+	printf("Base d'arriv%ce (2, 8, 10 ou 16) : ", 130);
+	if (scanf("%d", &base_out) != 1) return 0;
+	if (base_out != 2 && base_out != 8 && base_out != 10 && base_out != 16)
+	{ color(12,0); printf("\nBase non support%ce.\n\n", 130); color(15,0); return 0; }
+
+	if (valeur == 0) { sortie[len++] = '0'; }
+	while (valeur > 0) { sortie[len++] = digits[valeur % base_out]; valeur /= base_out; }
+
+	color(14,0);
+	printf("\nR%csultat : ", 130);
+	for (i = len - 1; i >= 0; i--) putchar(sortie[i]);
+	printf("  (base %d)\n\n", base_out);
+	color(15,0);
+	return 0;
+}
+
+/* Moyenne, mediane et ecart-type d'une serie saisie au clavier. */
+int stats(void)
+{
+	system("title Statistiques");
+
+	double serie[100], somme = 0.0, moyenne, variance = 0.0, mediane;
+	int n, i, j;
+
+	printf("\nMoyenne, m%cdiane et %ccart-type d'une s%crie.\n\n", 130, 130, 130);
+	printf("Combien de valeurs (1 %c 100) ? ", 133);
+	if (scanf("%d", &n) != 1) return 0;
+	if (n < 1 || n > 100)
+	{ color(12,0); printf("\nIl en faut entre 1 et 100.\n\n"); color(15,0); return 0; }
+
+	for (i = 0; i < n; i++)
+	{
+		printf("  valeur %d : ", i + 1);
+		if (scanf("%lf", &serie[i]) != 1) return 0;
+		somme += serie[i];
+	}
+
+	moyenne = somme / n;
+	for (i = 0; i < n; i++)
+		variance += (serie[i] - moyenne) * (serie[i] - moyenne);
+	variance /= n;
+
+	/* Tri par insertion, il faut la serie ordonnee pour la mediane. */
+	for (i = 1; i < n; i++)
+	{
+		double v = serie[i];
+		for (j = i - 1; j >= 0 && serie[j] > v; j--) serie[j+1] = serie[j];
+		serie[j+1] = v;
+	}
+	mediane = (n % 2) ? serie[n/2] : (serie[n/2 - 1] + serie[n/2]) / 2.0;
+
+	color(14,0);
+	printf("\nEffectif      : %d\n", n);
+	printf("Somme         : %g\n", somme);
+	printf("Moyenne       : %g\n", moyenne);
+	printf("M%cdiane       : %g\n", 130, mediane);
+	printf("Variance      : %g\n", variance);
+	printf("%ccart-type    : %g\n", 144, sqrt(variance));
+	printf("Minimum       : %g\n", serie[0]);
+	printf("Maximum       : %g\n\n", serie[n-1]);
+	color(15,0);
+	return 0;
+}
+
+/* Systeme de deux equations a deux inconnues, par la methode de Cramer. */
+int systeme2(void)
+{
+	system("title Systeme 2x2");
+
+	double a, b, c, d, e, f, det, x, y;
+
+	printf("\nSyst%cme de deux %cquations %c deux inconnues :\n", 138, 130, 133);
+	color(10,0);
+	printf("   a*x + b*y = c\n");
+	printf("   d*x + e*y = f\n\n");
+	color(15,0);
+
+	printf("Donnez a, b et c \n");
+	if (scanf("%lf %lf %lf", &a, &b, &c) != 3) return 0;
+	printf("Donnez d, e et f \n");
+	if (scanf("%lf %lf %lf", &d, &e, &f) != 3) return 0;
+
+	det = a * e - b * d;
+
+	if (det == 0.0)
+	{
+		color(12,0);
+		/* Determinant nul : soit les droites sont confondues, soit paralleles. */
+		if (a * f - c * d == 0.0 && c * e - b * f == 0.0)
+			printf("\nD%cterminant nul : une infinit%c de solutions.\n\n", 130, 130);
+		else
+			printf("\nD%cterminant nul : aucune solution.\n\n", 130);
+		color(15,0);
+		return 0;
+	}
+
+	x = (c * e - b * f) / det;
+	y = (a * f - c * d) / det;
+
+	color(14,0);
+	printf("\nD%cterminant = %g\n", 130, det);
+	printf("x = %g\n", x);
+	printf("y = %g\n\n", y);
+	color(15,0);
+	return 0;
+}
 /*=======================================================================*/
 int gettime()
 {
 SYSTEMTIME t;
 GetSystemTime(&t);
 printf("%d/%d/%d %d:%d:%d ",t.wDay,t.wMonth,t.wYear,t.wHour,t.wMinute,t.wSecond);
+	return 0;   /* la fonction est declaree int : sans return, comportement indefini */
 }
  /////////////////////////////////////////////////////////////////////////
 

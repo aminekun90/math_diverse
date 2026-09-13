@@ -82,5 +82,13 @@ int wtab(int*,int*,int,int);
 void change();
 //jeux
 void menujeux();
+/* Calculs ajoutes en 2026 */
+int calcexp(void);
+int calccos(void);
+int calcln(void);
+int pgcdppcm(void);
+int conversion(void);
+int stats(void);
+int systeme2(void);
 
 #endif

@@ -69,6 +69,38 @@ clang refuse (`(void*)0`). Remplacé par `{0}`, ce que l'auteur voulait dire.
 **`"MathDiverse "VER""`** — un littéral collé à une macro. C++11 exige une espace,
 sinon `invalid suffix on literal`.
 
+## Bugs corrigés, et pourquoi c'étaient bien des bugs
+
+Les corrections ci-dessous ne sont pas de la modernisation : ce sont des
+résultats faux ou du comportement indéfini. MinGW 4.9 ne les signalait pas,
+clang les voit tous.
+
+| Où | Le bug |
+|-|-|
+| `eq2()` | `(-b+sqrt(d))/2*a` vaut `((-b+√d)/2)·a`, **pas** `(-b+√d)/(2a)`. Toute équation avec a ≠ 1 donnait une racine fausse. Idem pour la racine double, `-b/2*a` |
+| `eq2()` | aucun test de `a == 0` : division par zéro sur une équation qui n'est pas du second degré |
+| `eq1()` | `result` n'était affecté que si `b != 0`, et affiché non initialisé sinon. Le message confondait les trois cas dégénérés — avec a ≠ 0 et b = 0, la solution est x = 0, ce n'est pas une erreur |
+| `fact()` | le tampon global `n` n'était jamais remis à `"1"` : un second calcul repartait de 1000!. C'est la limitation que l'auteur avait notée à l'écran. Corrigée, le garde-fou « une seule fois par session » a été retiré |
+| 8 fonctions | déclarées `int`, sans `return` — comportement indéfini en C++ |
+| `getch()` | rendait 10 au lieu de 13 pour Entrée : `ICRNL` n'était pas désactivé, le tty convertissait CR en LF et le menu ne reconnaissait plus la touche |
+
+Le tri à bulles et l'indentation trompeuse signalés par clang aux lignes 374 et
+732 **ne sont pas** des bugs : la logique est correcte, seul le formatage
+trompe.
+
+## Calculs ajoutés en 2026
+
+`calcexp` (c'était l'entrée « Bientôt » depuis 2014), `calccos`, `calcln`,
+`pgcdppcm`, `conversion` (bases 2/8/10/16), `stats` (moyenne, médiane,
+variance, écart-type) et `systeme2` (Cramer). Ils suivent le style de la
+maison : accents en codes CP850 via `%c`, pour rester lisibles sur la console
+Windows comme sur un terminal UTF-8.
+
+Les trois menus concernés ont été réécrits pour les accueillir. **Attention aux
+bornes** : chaque menu a un tableau `t[]` de couleurs dont le dernier élément
+est la ligne `[ESCAPE]`, et la garde `if(choix==HAUT && i!=N)` doit pointer sur
+ce dernier index — sinon la navigation se bloque ou déborde.
+
 ## Commandes (vérifiées sur macOS arm64)
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release
