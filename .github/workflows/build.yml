@@ -42,21 +42,37 @@ jobs:
             build/a.xm
 
   windows:
-    name: Windows x86 (code d'origine)
+    name: Windows (MinGW, toolchain d'origine)
+    # Le projet a toujours été construit avec TDM-GCC sous Dev-C++ : VLA,
+    # M_PI, unistd.h, déclarations de fonctions à l'ancienne. MSVC refuse
+    # tout cela, et le rendre compatible reviendrait à réécrire le code de
+    # 2010 — ce que ce dépôt ne veut pas faire. On reste donc sur GCC.
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
-      - name: Configure (Win32)
-        run: cmake -B build -A Win32
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+      - name: Configure
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
       - name: Build
-        run: cmake --build build --config Release
+        run: cmake --build build
       - name: Vérifier l'exécutable
-        shell: pwsh
         run: |
-          $exe = "build/Release/MathDiverse.exe"
-          if (-not (Test-Path $exe)) { throw "MathDiverse.exe absent" }
-          Get-Item $exe | Format-List Name, Length
+          test -f build/MathDiverse.exe
+          file build/MathDiverse.exe
       - uses: actions/upload-artifact@v4
         with:
-          name: MathDiverse-win32
-          path: build/Release/MathDiverse.exe
+          name: MathDiverse-windows-mingw
+          path: |
+            build/MathDiverse.exe
+            build/tetris.wav
+            build/a.xm
