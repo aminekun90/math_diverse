@@ -194,6 +194,37 @@ while (done)
 	return 0;
 }
 
+/* Saisie robuste d'un entier.
+   scanf("%d") laisse le caractere fautif dans le tampon quand la lecture
+   echoue : le rappeler dans une boucle produit une boucle infinie a pleine
+   vitesse — c'est exactement ce qui arrivait dans calctri(). On vide donc la
+   ligne, et on rend 0 pour que l'appelant decide quoi faire. */
+int lire_reel(const char* invite, float* sortie)
+{
+	int c;
+	printf("%s", invite);
+	if (scanf("%f", sortie) == 1) return 1;
+
+	while ((c = getchar()) != '\n' && c != EOF) { }
+	color(12,0);
+	printf("\nSaisie invalide.\n");
+	color(15,0);
+	return 0;
+}
+
+int lire_entier(const char* invite, int* sortie)
+{
+	int c;
+	printf("%s", invite);
+	if (scanf("%d", sortie) == 1) return 1;
+
+	while ((c = getchar()) != '\n' && c != EOF) { }   /* vider la ligne fautive */
+	color(12,0);
+	printf("\nSaisie invalide.\n");
+	color(15,0);
+	return 0;
+}
+
 int eq1()
 {
 	system("title Equation de premier degré");
@@ -202,7 +233,8 @@ float a,b,result;
 system("cls");
 printf("\nVotre Equation est sous la forme ax+b=0");
 printf("\nDonnez a ensuite b\n");
-scanf("%f%f",&a,&b);
+if (!lire_reel("a = ", &a)) return 0;
+if (!lire_reel("b = ", &b)) return 0;
 printf("a=%0.f ; b=%0.f",a,b);
 
 /* Corrige deux bugs d'origine :
@@ -239,7 +271,9 @@ int eq2()
 	printf("\nVotre Equation est sous la forme: ax^2+bx+c=0\n");
 	float a,b,c,d,x1,x2;
 	printf("Donner a et b et c:\n");
-	scanf("%f%f%f",&a,&b,&c);
+	if (!lire_reel("a = ", &a)) return 0;
+	if (!lire_reel("b = ", &b)) return 0;
+	if (!lire_reel("c = ", &c)) return 0;
 	printf("\na=%0.f ; b=%0.f ; c=%0.f\n",a,b,c);
 	/* a == 0 : ce n'est plus une equation du second degre, et 2*a au
 	   denominateur diviserait par zero. */
@@ -292,15 +326,24 @@ void calcdet(void)
 {
 	system("title Déterminant d'une Matrice");
 	float a[LIMIT][LIMIT],temp[LIMIT][LIMIT],value;
-  int i,j,order;
-  printf("Taille de votre matrice :");
-  scanf("%d",&order);
+  int i,j,order = 0;
+  /* order n'etait ni initialise ni borne : au-dela de LIMIT, la saisie
+     ecrivait hors du tableau a[LIMIT][LIMIT], sur la pile. */
+  if (!lire_entier("Taille de votre matrice :", &order)) return;
+  if (order < 1 || order > LIMIT)
+  {
+    color(12,0);
+    printf("\nLa taille doit %ctre comprise entre 1 et %d.\n", 136, LIMIT);
+    color(15,0);
+    return;
+  }
   for(i=0;i<order;i++)
   {
  for(j=0;j<order;j++)
  {
-   printf("La case [%d,%d]:",i+1,j+1);
-   scanf("%f",&a[i][j]);
+   char invite[48];
+   sprintf(invite, "La case [%d,%d]:", i+1, j+1);
+   if (!lire_reel(invite, &a[i][j])) return;
    temp[i][j]=a[i][j];
  }
   }
@@ -543,25 +586,7 @@ void tri_rapide(int *t,int n)
 
  /* Fin de la définition des fonctions de tri */
 
- /* Saisie robuste d'un entier.
-   scanf("%d") laisse le caractere fautif dans le tampon quand la lecture
-   echoue : le rappeler dans une boucle produit une boucle infinie a pleine
-   vitesse — c'est exactement ce qui arrivait dans calctri(). On vide donc la
-   ligne, et on rend 0 pour que l'appelant decide quoi faire. */
-int lire_entier(const char* invite, int* sortie)
-{
-	int c;
-	printf("%s", invite);
-	if (scanf("%d", sortie) == 1) return 1;
-
-	while ((c = getchar()) != '\n' && c != EOF) { }   /* vider la ligne fautive */
-	color(12,0);
-	printf("\nSaisie invalide.\n");
-	color(15,0);
-	return 0;
-}
-
-int calctri(void)
+ int calctri(void)
  {
  	system("title Tri de Tableau");
      int nb_entiers;

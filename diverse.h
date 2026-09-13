@@ -63,6 +63,7 @@ void tri_rapide_bis(int*, int,int);
 void tri_rapide(int*,int);
 int calctri(void);
 int lire_entier(const char* invite, int* sortie);
+int lire_reel(const char* invite, float* sortie);
 //Autres
 int menuautres();
 void multiply(int);//factoriel très amélioré !! 2000!

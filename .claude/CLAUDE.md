@@ -204,6 +204,30 @@ bornes** : chaque menu a un tableau `t[]` de couleurs dont le dernier élément
 est la ligne `[ESCAPE]`, et la garde `if(choix==HAUT && i!=N)` doit pointer sur
 ce dernier index — sinon la navigation se bloque ou déborde.
 
+## Tests
+
+```bash
+cmake --build build && ./build/tests_math
+```
+
+74 vérifications sur les fonctions **pures** — celles qui n'écrivent rien :
+primalité, Lucas-Lehmer, facteurs de Mersenne, séries de Taylor, arithmétique
+modulaire. Le binaire de test lie exactement le même code que le programme,
+avec un autre point d'entrée : `MD_CORE` dans `CMakeLists.txt` regroupe tout
+sauf `main.cpp`. Les trois jobs de CI le lancent.
+
+Chaque test correspond à un bug réellement rencontré : 1 déclaré premier,
+`sin(3600°)` à 2,9 × 10²⁴, `exp(−40)` à 6,35 × 10¹³, le plafond de `fact2` au
+rang 84. **Ne pas les supprimer en refactorant — ce sont les régressions
+qu'on a déjà payées.**
+
+Les fonctions de menu ne sont pas testables ainsi : elles lisent au clavier et
+écrivent à l'écran. Pour celles-là, le pilotage sous pty reste la seule voie.
+
+⚠️ `compat.h` redéfinit `printf`, `scanf` et `system` en macros. Dans les
+tests, écrire `printf`, jamais `std::printf` — la forme qualifiée ne se résout
+pas.
+
 ## Commandes (vérifiées sur macOS arm64)
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release

@@ -11,9 +11,9 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Les 25 unités du projet Dev-C++ d'origine (MathDiverse.dev).
-set(MD_SOURCES
-  main.cpp
+# Les 25 unités du projet Dev-C++ d'origine (MathDiverse.dev),
+# moins main.cpp que les tests remplacent par le leur.
+set(MD_CORE
   diverse.cpp
   tetris.cpp
   allumettes.c
@@ -30,11 +30,24 @@ set(MD_SOURCES
 )
 
 if(NOT WIN32)
-  list(APPEND MD_SOURCES platform/compat.c)
+  list(APPEND MD_CORE platform/compat.c)
 endif()
 
-add_executable(MathDiverse ${MD_SOURCES})
+add_executable(MathDiverse main.cpp ${MD_CORE})
 target_include_directories(MathDiverse PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Tests de non-regression des calculs : meme code, un autre point d'entree.
+enable_testing()
+add_executable(tests_math tests/test_math.cpp ${MD_CORE})
+target_include_directories(tests_math PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+if(WIN32)
+  target_link_libraries(tests_math PRIVATE winmm)
+endif()
+if(MSVC)
+  target_compile_definitions(tests_math PRIVATE _CRT_SECURE_NO_WARNINGS)
+  target_compile_options(tests_math PRIVATE /utf-8)
+endif()
+add_test(NAME calculs COMMAND tests_math)
 
 if(WIN32)
   target_link_libraries(MathDiverse PRIVATE winmm)
