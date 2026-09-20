@@ -50,7 +50,7 @@ void StartGame()
     
     
     
-    // Invulnerabilité
+    // InvulnerabilitÃ©
     bool invulnerable = false;
     int timeLeft = 0;
     int invulColor = GREY;
@@ -93,23 +93,23 @@ void StartGame()
     // Texte
     setCursorPos(7, 1);
     cout << "Snake Console - Hellow-dev - ";
-    cout << "Tous droits r" << char(130) << "serv" << char(130) << "s © (ou pas)";
+    cout << "Tous droits r" << char(130) << "serv" << char(130) << "s Â© (ou pas)";
     
-    // Génération des obstacles de base
+    // GÃ©nÃ©ration des obstacles de base
     generateWallBase(mapObject);
     generateRandomWalls(mapObject, snakePosX, snakePosY, 20);
     
-    // Génération de la pomme
+    // GÃ©nÃ©ration de la pomme
     GenerateApple(&appleX, &appleY, &bonusType, &appleLenght, snakeSize, snakePosX, snakePosY, mapObject);
     
     while (1)
     {
-        // Enregistrement de la dernière position
+        // Enregistrement de la derniÃ¨re position
         
         int tempX = snakePosX.back();
         int tempY = snakePosY.back();
         
-        // Gestion de l'invicibilité
+        // Gestion de l'invicibilitÃ©
         
         if (invulnerable)
         {
@@ -137,7 +137,7 @@ void StartGame()
             }
         }
         
-        // Décalage
+        // DÃ©calage
         
         for (int i = snakeSize - 1; i > 0 ; i--) 
         {
@@ -168,7 +168,7 @@ void StartGame()
                
         }
         
-        // Vérification d'une colision
+        // VÃ©rification d'une colision
         
         if ( mapObject[snakeX][snakeY] == 1 )
         {
@@ -186,7 +186,7 @@ void StartGame()
            return;
         }
         
-        // Vérification de la pomme
+        // VÃ©rification de la pomme
         
         if ((snakeX == appleX) && (snakeY == appleY))
         {
@@ -250,7 +250,7 @@ void StartGame()
         setCursorPos(snakePosX.front(), snakePosY.front());
         cout << "O";
         
-        // Attente et vérification du clavier
+        // Attente et vÃ©rification du clavier
         
         hasMoved = false;
         for (int i = 1; i <= 3; i++)

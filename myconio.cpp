@@ -1,16 +1,16 @@
 // Nom du fichier : myconio.cpp
 // Auteur : prof.geii37@laposte.net
 // Version : Novembre 2004
-// Objectif : remédier à l'absence de certaines fonctions conio sous DevC++
+// Objectif : remÃ©dier Ã  l'absence de certaines fonctions conio sous DevC++
 
 /* Remarques :
     - Ce fichier est inclus par myconio.h.
-    - Au sein d'un fichier source seule la directive « #include <myconio.h> » 
-      est nécessaire. Elle remplace « #include <conio.h> »... La directive
-      « #include <conio.cpp> » est inutile. 
-    - Pour obtenir des informations sur les fonctions de la bibliothèque window
-      (wincon, winbase) utilisés dans ce fichier, 
-      il faut consulter  « http://www.msdn.microsoft.com/library/default.asp ».
+    - Au sein d'un fichier source seule la directive Â« #include <myconio.h> Â» 
+      est nÃ©cessaire. Elle remplace Â« #include <conio.h> Â»... La directive
+      Â« #include <conio.cpp> Â» est inutile. 
+    - Pour obtenir des informations sur les fonctions de la bibliothÃ¨que window
+      (wincon, winbase) utilisÃ©s dans ce fichier, 
+      il faut consulter  Â« http://www.msdn.microsoft.com/library/default.asp Â».
 */  
   
 #ifndef _MYCONIO_C_
@@ -33,12 +33,12 @@ char *cgets(char *str)
     {
         switch(str[i])
         {
-            case '\b' : if(i<=2) break ; // pas de caractère à effacer
+            case '\b' : if(i<=2) break ; // pas de caractÃ¨re Ã  effacer
                         printf("\b \b") ;
                         i -- ;
                         break ;
             case 0    :
-            case -32  : MYgetch() ; // lire le 2ème caractère des codes étendus
+            case -32  : MYgetch() ; // lire le 2Ã¨me caractÃ¨re des codes Ã©tendus
             case 9    :           // ne pas tenir compte de la touche [TAB]
             case 27   : break ;   // ne pas tenir compte de la touche [ESC]
             default   : if(i<=str[0]) 
@@ -67,9 +67,9 @@ void clreol()
     }  
 }
 
-void clrscr(void) // efface l'écran
+void clrscr(void) // efface l'Ã©cran
 {     
-  // Première solution :         OK ! 
+  // PremiÃ¨re solution :         OK ! 
   COORD coord = { 0, 0 } ; //  coord.X = 0;  coord.Y = 0;
   DWORD dwWritten, dwSize ;
   HANDLE hScreen=GetStdHandle(STD_OUTPUT_HANDLE) ;
@@ -83,7 +83,7 @@ void clrscr(void) // efface l'écran
                   &dwWritten);
       gotoxy (1, 1);
   }  
-  /* Seconde solution : moins efficace - nécessite plus de temps 
+  /* Seconde solution : moins efficace - nÃ©cessite plus de temps 
                       - ne prend pas en compte les couleurs */
   /*
   system("cls") ;
@@ -125,9 +125,9 @@ int MYgetch(void)
     int Ret=getch() ;
     if (Ret==0x0D) gets(Temp) ; 
     /* Si la touche choisie par l'utilisateur est <CR> alors
-       « FlushConsoleInputBuffer » ne fonctionne pas d'où l'astuce avec gets. */
+       Â« FlushConsoleInputBuffer Â» ne fonctionne pas d'oÃ¹ l'astuce avec gets. */
     else FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE)) ;
-    /* « fflush(stdin) ;  » ne fonctionne pas ! Sans effet apparent ! */
+    /* Â« fflush(stdin) ;  Â» ne fonctionne pas ! Sans effet apparent ! */
     return Ret ;
 }
             
@@ -315,7 +315,7 @@ int wherey() {
 }
 
 void MYclrwin(int left, int top, int right, int bottom) 
-// efface une zone de l'écran
+// efface une zone de l'Ã©cran
 {     
   int i ;
   COORD dwCoord = {0, 0} ;

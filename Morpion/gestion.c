@@ -63,7 +63,7 @@ int pc=0,d=1,q=0,gag;
 void Utilisateur(char map[][LaM],int jeu[][3],int *x,int *y,int *i,Objet *tabl)
 {
 /*tour du joueur*/
- char ltr=getch();//on stock la touche pressé pas ce dernier
+ char ltr=getch();//on stock la touche pressÃ© pas ce dernier
 
  if( ltr==BAS && *y!=(LR*2)+3 )   BOUGE_CURSEUR DOWN ;
  if( ltr==HAUT && *y!=1 )         BOUGE_CURSEUR UP ;

@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "platform/compat.h"
+#endif
 #include <time.h>
+#ifdef _WIN32
 #include<conio.h>
+#endif
 #define CHANGE  x=t[pc][1];y=t[pc][2]
 #define ERASE jeu[y/7][x/10]=0;
 #define BOUGE_CURSEUR deplaser(map,&(*x),&(*y),

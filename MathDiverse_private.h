@@ -14,7 +14,7 @@
 #define FILE_VERSION	"1.0.6.0"
 #define FILE_DESCRIPTION	"Diverses Operations de math"
 #define INTERNAL_NAME	"D-code"
-#define LEGAL_COPYRIGHT	"Tous droits réservés © 2014"
+#define LEGAL_COPYRIGHT	"Tous droits rÃ©servÃ©s Â© 2014"
 #define LEGAL_TRADEMARKS	"Hellow-dev"
 #define ORIGINAL_FILENAME	"Diverses"
 #define PRODUCT_NAME	"Math Diverse"

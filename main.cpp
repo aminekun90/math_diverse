@@ -26,11 +26,13 @@ void SetWindow(int Width, int Height)
     
 int main() 
 {
-	setTitle("MathDiverse "VER"");
+	setTitle("MathDiverse " VER "");
 	SetWindow(800, 500);
 color(2,15);
 setCursorPos(0, 5);
-	const char *screen[12] = {
+	// Le tableau ne compte que 9 lignes ; la boucle en parcourait 12 et
+	// appelait puts(NULL) trois fois, d'oÃ¹ les Â« (null) Â» Ã  l'Ã©cran.
+	const char *screen[] = {
 		"+-----------------------------------------------------------------------------+",
         "|   ##     ## ########  #### ##     ## ######## ########   ######  ########   |",
         "|   ###   ### ##     ##  ##  ##     ## ##       ##     ## ##    ## ##         |",
@@ -39,11 +41,12 @@ setCursorPos(0, 5);
         "|   ##     ## ##     ##  ##   ##   ##  ##       ##   ##         ## ##         |",
         "|   ##     ## ##     ##  ##    ## ##   ##       ##    ##  ##    ## ##         |",
         "|   ##     ## ########  ####    ###    ######## ##     ##  ######  ########   |",
-		"+------------------------Par-HELLOW-DEV-----------------------------"VERP"beta--+",
+		"+------------------------Par-HELLOW-DEV-----------------------------" VERP "beta--+",
 	};
 
         	color(2,0);
-		for(int line = 0; line < 12; ++line) {
+		const int screenLines = (int)(sizeof(screen) / sizeof(screen[0]));
+		for(int line = 0; line < screenLines; ++line) {
 			
 		puts(screen[line]);
 	 Sleep(50);
@@ -55,7 +58,7 @@ Sleep(1000);
 	system("cls");
 	color(14,0);
 	setCursorPos(5, 10);
-	printf("Bienvenu dans le nouveau MathDiverse %s B%cta Les menus ont été repensés\n",VERP,136,130,130,130);
+	printf("Bienvenu dans le nouveau MathDiverse %s B%cta Les menus ont Ã©tÃ© repensÃ©s\n",VERP,136,130,130,130);
     setCursorPos(6, 11);
     printf("D%csormet vous pouvez utiliser les fl%cches du clavier pour naviguer %c\n",130,138,1);
 	setCursorPos(40, 22);
@@ -69,9 +72,9 @@ while(done)
 {
 	label:
 		color(7,0);
-	printf("ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»\t\t");gettime();
-	printf("\nºMise %c Jour: ",133);JOUR;printf(" Version  %s.º",VER);
-	printf("\nÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼\n");
+	printf("â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—\t\t");gettime();
+	printf("\nâ•‘Mise %c Jour: ",133);JOUR;printf(" Version  %s.â•‘",VER);
+	printf("\nâ•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n");
 	 changeColor(WHITE);
 	//printf("%d",i);
 	setCursorPos(5, 10);
@@ -95,15 +98,15 @@ while(done)
     printf("Ou sur [ESC] pour Quitter.");
     choix=getch();
 	if(choix==BAS  && i!=0) {t[i]=15; i--;}
-          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zï¿½ro
+          /*si l'utilisateur a clicker sur bas et que le curseur n'egale pas zÃ¯Â¿Â½ro
           on descend le curseur dans le menu*/
           if(choix==HAUT && i!=3) {t[i]=15; i++;}
-          /*la mï¿½me chose avec haut*/
+          /*la mÃ¯Â¿Â½me chose avec haut*/
             t[3]=12;
 			t[i]=10;   
 			system("cls");//on bouge le  curseur dans le menu
           if(choix==27){done=0; quitter(); }
-	if(choix==OK)//si l'utilisateur a cliquï¿½ sur entreï¿½
+	if(choix==OK)//si l'utilisateur a cliquÃ¯Â¿Â½ sur entreÃ¯Â¿Â½
           {
 	switch(i)
 	{
